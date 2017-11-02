@@ -1,0 +1,12 @@
+MAS evacuation {
+
+	infrastructure: Centralised
+
+	//environment
+
+	agents:
+		agent1 evacuador;
+
+	aslSourcePath:
+		"src/asl";
+}
