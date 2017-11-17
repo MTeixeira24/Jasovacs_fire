@@ -12,6 +12,6 @@ public class EvacuationModel extends GridWorldModel{
 	
 	public EvacuationModel(int w, int h, int nbAgs) {
 		super(w,h,nbAgs);
-		this.setAgPos(0, 10, 10);
+		setAgPos(0, 10, 10);
 	}
 }

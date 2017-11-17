@@ -51,7 +51,7 @@ public class EvacuationGUI extends GridWorldView{
 	
 	@Override
 	public void drawAgent(Graphics g, int x, int y, Color c, int id) {
-		super.drawAgent(g, 50, 50, Color.BLACK, -1);
+		super.drawAgent(g, x, y, Color.yellow, -1);
 	}
 	
 	public static void main(String[] args) throws Exception {
