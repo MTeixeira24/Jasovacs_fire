@@ -4,20 +4,16 @@
 
 saude(boa).
 estado(fora_perigo).
-knowExit.
-exit_direction(1).
+/*knowExit.
+exit_direction(1).*/
 
 /* Initial goals */
 
 !start.
-//!wander.
+!wander.
 
 /* Plans */
 
-+!wander : estado(fora_perigo) <- !randomWalk; !wander.
-+!wander : estado(em_perigo) <- !searchSigns.
-
-+!randomWalk /*: belief pos */ <- moveRandom.
-+!searchSigns <- getEvacDirection; !run. 
++!wander : true <- randomwalk; .wait(500); !wander.  
 
 +!start : true <- .print("hello world."); .wait(3000); !start.
