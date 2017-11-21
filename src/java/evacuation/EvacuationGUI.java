@@ -23,14 +23,24 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/*
+ * 
+ * Classe responsável pelas views da nossa simulação
+ * 
+ */
 
 public class EvacuationGUI extends GridWorldView{
 	
 	private static final long serialVersionUID = -5707099999380284737L;
+	//Guardar referencia ao controller
 	EvacuationPlanet env = null;
 	
 	public EvacuationGUI(EvacuationModel model) {
-		super(model, "Evacuation World", 600);
+		/*
+		 * No controller temos de instanciar um modelo
+		 * antes de instanciar uma classe view
+		 */
+		super(model, "Evacuation World", 600); //Modelo título e tamanho de janela
 		setVisible(true);
 		repaint();
 		
@@ -45,10 +55,15 @@ public class EvacuationGUI extends GridWorldView{
 		super.initComponents(width);
 		JPanel args = new JPanel();
 		args.setLayout(new BoxLayout(args, BoxLayout.Y_AXIS));
-		
-		
+		/*
+		 * Nota: as classes views estendem a classe GridWorldView
+		 * que já possuem um objecto canvas instanciado
+		 */
 	}
 	
+	//Desenho do agente representado por um ponto numa grid canvas
+	//Esta função é chamada a cada uso da função setAgPos, que é
+	//usada pelo modelo
 	@Override
 	public void drawAgent(Graphics g, int x, int y, Color c, int id) {
 		super.drawAgent(g, x, y, Color.yellow, -1);

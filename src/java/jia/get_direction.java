@@ -16,10 +16,13 @@ import java.util.List;
 
 import busca.*;
 
-public class Get_Direction extends DefaultInternalAction {
+public class get_direction extends DefaultInternalAction {
 
 	/**
+	 * Classes que serve como uma implementação de uma acção Jason
+	 * estas classes são chamadas como predicados nos ficheiros ASL
 	 * 
+	 * eg: +!goal(X) : true <- classe(X,Y)
 	 */
 	private static final long serialVersionUID = -7810772148881781422L;
 

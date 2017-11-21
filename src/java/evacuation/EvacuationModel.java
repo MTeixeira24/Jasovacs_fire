@@ -7,32 +7,45 @@ import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
 import evacuation.EvacuationPlanet.Move;
 
+/*
+ * 
+ * Classe responsável por gerir o estado da simulação
+ * 
+ */
 public class EvacuationModel extends GridWorldModel{
 	
     private String            id = "EvacuationModel";
 	
+    //Declaração de variável static para implementar o padrão singleton
     protected static EvacuationModel model = null;
     
+    //Instanciação de um modelo global
     synchronized public static EvacuationModel create(int w, int h, int nbAgs) {
     	if(model == null) {
-    		model = new EvacuationModel(w,h,nbAgs);
+    		model = new EvacuationModel(w,h,nbAgs); //width Height NºdeAgentes
     	}
     	return model;
     }
     
+    //Construtor
 	public EvacuationModel(int w, int h, int nbAgs) {
 		super(w,h,nbAgs);
 	}
 	
+	//Definição de um mundo, neste caso World1. Podemos acrescentar mais
 	static EvacuationModel world1() throws Exception {
 	 EvacuationModel model = EvacuationModel.create(20, 20, 1);
-	 model.setAgPos(0, 10, 10);
+	 model.setAgPos(0, 10, 10); //Definir id e posição do agente no mundo
 	 return model;
 	}
 	
+	//getModelo
 	public static EvacuationModel get() {
         return model;
     }
+	
+	//Aplicação das acções de movimento de um agente no mundo
+	//UP DOWN RIGHT LEFT são enums de EvacuationPlanet
 	boolean move(Move dir, int ag) throws Exception {
         Location l = getAgPos(ag);
         switch (dir) {

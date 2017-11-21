@@ -10,7 +10,11 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.*;
 
-
+/*
+ * Classe que funciona como um controller
+ * entre o modelo e a view
+ * Gere pedidos percepções dos agentes 
+ */
 public class EvacuationPlanet extends Environment {
 	
 	private Logger logger = Logger.getLogger("");
@@ -19,6 +23,8 @@ public class EvacuationPlanet extends Environment {
     private EvacuationModel model;
     
     boolean running = true;
+    
+    
     
     Term                    up       = Literal.parseLiteral("do(up)");
     Term                    down     = Literal.parseLiteral("do(down)");
@@ -30,11 +36,13 @@ public class EvacuationPlanet extends Environment {
         UP, DOWN, RIGHT, LEFT
     };
     
+    /*Começar aqui*/
     @Override
     public void init(String[] args) {
     	initWorld();
     }
     
+    /*Executar as acçoes dos agentes*/
     @Override
     public boolean executeAction(String ag, Structure action) {
     	boolean result = false;
@@ -77,6 +85,7 @@ public class EvacuationPlanet extends Environment {
         super.stop();
     }
     
+    /*Chamada de modelos e views*/
     public void initWorld() {
     	//setModel
     	try {
@@ -90,6 +99,7 @@ public class EvacuationPlanet extends Environment {
     	
     }
     
+    /*Controlo das percepções dos agentes*/
     private void updateAgPercept(int ag) {
         updateAgPercept("evacuador" + (ag + 1), ag);
     }
