@@ -36,6 +36,12 @@ public class EvacuationModel extends GridWorldModel{
 	static EvacuationModel world1() throws Exception {
 	 EvacuationModel model = EvacuationModel.create(20, 20, 1);
 	 model.setAgPos(0, 10, 10); //Definir id e posição do agente no mundo
+	 model.add(EvacuationModel.OBSTACLE, 12, 10); //Obstacle é herdado de GridWorldModel
+	 model.add(EvacuationModel.OBSTACLE, 12, 9);
+	 model.add(EvacuationModel.OBSTACLE, 12, 8);
+	 model.add(EvacuationModel.OBSTACLE, 11, 7);
+	 model.add(EvacuationModel.OBSTACLE, 10, 7);
+	 model.add(EvacuationModel.OBSTACLE, 9, 7);
 	 return model;
 	}
 	
