@@ -69,6 +69,19 @@ public class EvacuationGUI extends GridWorldView{
 		super.drawAgent(g, x, y, Color.yellow, -1);
 	}
 	
+	//Desenho de outras estruturas no mundo
+	@Override
+	public void draw(Graphics g, int x, int y, int object) {
+		switch(object) {
+		case EvacuationModel.EXIT:
+			g.setColor(Color.green);
+			int rx = x * cellSizeW + 2, ry = y * cellSizeH + 2, rw = cellSizeW - 4, rh = cellSizeH - 4;
+			g.drawRect(rx, ry, rw, rh);
+	        g.fillRect(rx, ry, rw, rh);
+			break;
+		}
+	}
+	
 	public static void main(String[] args) throws Exception {
         EvacuationPlanet env = new EvacuationPlanet();
         env.init(new String[] {"5","50","yes"});

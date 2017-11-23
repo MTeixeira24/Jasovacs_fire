@@ -14,6 +14,8 @@ import evacuation.EvacuationPlanet.Move;
  */
 public class EvacuationModel extends GridWorldModel{
 	
+	public static final int EXIT = 16;
+	
     private String            id = "EvacuationModel";
 	
     //Declaração de variável static para implementar o padrão singleton
@@ -42,6 +44,10 @@ public class EvacuationModel extends GridWorldModel{
 	 model.add(EvacuationModel.OBSTACLE, 11, 7);
 	 model.add(EvacuationModel.OBSTACLE, 10, 7);
 	 model.add(EvacuationModel.OBSTACLE, 9, 7);
+	 model.add(EvacuationModel.OBSTACLE, 11, 11);
+	 model.add(EvacuationModel.OBSTACLE, 10, 11);
+	 model.add(EvacuationModel.OBSTACLE, 9, 11);
+	 model.add(EvacuationModel.EXIT, 15, 0);
 	 return model;
 	}
 	
