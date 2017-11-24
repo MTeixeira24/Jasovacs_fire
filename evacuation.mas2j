@@ -5,7 +5,7 @@ MAS evacuation {
 	environment: evacuation.EvacuationPlanet
 
 	agents:
-		evacuador1 evacuador;
+		evacuador evacuador#2;
 
 	aslSourcePath:
 		"src/asl";

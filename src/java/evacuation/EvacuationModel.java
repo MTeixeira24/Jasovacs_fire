@@ -15,6 +15,12 @@ import evacuation.EvacuationPlanet.Move;
 public class EvacuationModel extends GridWorldModel{
 	
 	public static final int EXIT = 16;
+	public static final int EXIT_INFO = 17; //Informacao de saida
+	public static final int COLLAPSED_EXIT = 18; //Saida colapsada
+	public static final int DANGER = 20;
+	public static final int DANGER_INFO = 21; //Informacao de perigo
+	public static final int SMOKE = 22; //Fumo
+	
 	
     private String            id = "EvacuationModel";
 	
@@ -36,8 +42,9 @@ public class EvacuationModel extends GridWorldModel{
 	
 	//Definição de um mundo, neste caso World1. Podemos acrescentar mais
 	static EvacuationModel world1() throws Exception {
-	 EvacuationModel model = EvacuationModel.create(20, 20, 1);
+	 EvacuationModel model = EvacuationModel.create(20, 20, 2); 
 	 model.setAgPos(0, 10, 10); //Definir id e posição do agente no mundo
+	 model.setAgPos(1, 15, 3); //Definir id e posição do agente no mundo
 	 model.add(EvacuationModel.OBSTACLE, 12, 10); //Obstacle é herdado de GridWorldModel
 	 model.add(EvacuationModel.OBSTACLE, 12, 9);
 	 model.add(EvacuationModel.OBSTACLE, 12, 8);
@@ -60,6 +67,7 @@ public class EvacuationModel extends GridWorldModel{
 	//UP DOWN RIGHT LEFT são enums de EvacuationPlanet
 	boolean move(Move dir, int ag) throws Exception {
         Location l = getAgPos(ag);
+        System.out.println("XXX->X"+l.x+"\n"+l.x);
         switch (dir) {
         case UP:
             if (isFree(l.x, l.y - 1)) {
