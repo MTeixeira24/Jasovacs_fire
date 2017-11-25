@@ -31,6 +31,8 @@ public class EvacuationPlanet extends Environment {
     Term                    right    = Literal.parseLiteral("do(right)");
     Term                    left     = Literal.parseLiteral("do(left)");
     Term                    skip     = Literal.parseLiteral("do(skip)");
+    Term					getPosition = Literal.parseLiteral("agentGetPosition");
+    Term					exit = Literal.parseLiteral("exit");
     Term                    randomwalk     = Literal.parseLiteral("randomwalk");
     
     public enum Move {
@@ -67,7 +69,13 @@ public class EvacuationPlanet extends Environment {
                  result = model.move(Move.LEFT, agId);
              } else if (action.equals(skip)) {
                  result = true;
-             }else {
+             }else if(action.equals(getPosition)){
+            	 updateAgPercept(agId);
+            	 result = true;
+             }else if(action.equals(exit)){
+            	 model.setAgPos(agId, 0,0);
+            	 result = true;
+             }else{
             	 logger.info("executing: " + action + ", but not implemented!");
              }
         	 if (result) {

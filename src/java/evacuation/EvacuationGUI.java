@@ -66,7 +66,9 @@ public class EvacuationGUI extends GridWorldView{
 	//usada pelo modelo
 	@Override
 	public void drawAgent(Graphics g, int x, int y, Color c, int id) {
-		super.drawAgent(g, x, y, Color.yellow, -1);
+		if(!(x == 0 && y == 0)) {
+			super.drawAgent(g, x, y, Color.yellow, -1);
+		}
 	}
 	
 	//Desenho de outras estruturas no mundo

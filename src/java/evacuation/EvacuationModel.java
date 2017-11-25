@@ -54,6 +54,7 @@ public class EvacuationModel extends GridWorldModel{
 	 model.add(EvacuationModel.OBSTACLE, 11, 11);
 	 model.add(EvacuationModel.OBSTACLE, 10, 11);
 	 model.add(EvacuationModel.OBSTACLE, 9, 11);
+	 model.add(EvacuationModel.OBSTACLE, 0, 0);
 	 model.add(EvacuationModel.EXIT, 15, 0);
 	 return model;
 	}
