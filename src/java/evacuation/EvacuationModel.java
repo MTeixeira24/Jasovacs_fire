@@ -15,7 +15,7 @@ import evacuation.EvacuationPlanet.Move;
 public class EvacuationModel extends GridWorldModel{
 	
 	public static final int EXIT = 16;
-	public static final int EXIT_INFO = 17; //Informacao de saida
+	public static final int EXIT_INFO = 32; //Informacao de saida
 	public static final int COLLAPSED_EXIT = 18; //Saida colapsada
 	public static final int DANGER = 20;
 	public static final int DANGER_INFO = 21; //Informacao de perigo
@@ -44,20 +44,67 @@ public class EvacuationModel extends GridWorldModel{
 	static EvacuationModel world1() throws Exception {
 	 EvacuationModel model = EvacuationModel.create(20, 20, 2); 
 	 model.setAgPos(0, 10, 10); //Definir id e posição do agente no mundo
-	 model.setAgPos(1, 15, 3); //Definir id e posição do agente no mundo
-	 model.add(EvacuationModel.OBSTACLE, 12, 10); //Obstacle é herdado de GridWorldModel
-	 model.add(EvacuationModel.OBSTACLE, 12, 9);
-	 model.add(EvacuationModel.OBSTACLE, 12, 8);
+	 model.setAgPos(1, 12, 9); //Definir id e posição do agente no mundo
+	 //Rodear a zona de paredes
+	 //Obstacle é herdado de GridWorldModel
+	 for(int i = 0; i < model.width; i++) {
+		 if(i != 15) 
+			 model.add(EvacuationModel.OBSTACLE, i, 0);
+		 model.add(EvacuationModel.OBSTACLE, i, model.height - 1);
+	 }
+	 for(int i = 0; i < model.height  - 1; i++) {
+		 model.add(EvacuationModel.OBSTACLE, 0, i);
+		 model.add(EvacuationModel.OBSTACLE, model.width - 1, i);
+	 }
+	 
+	 //Criar compartimentos dentro da nossa zona
+	 //Sala inicial
+	 boolean open = true;
+	 for(int i = 8; i < 14; i++) {
+		 if(!(open && i == 12))
+			 model.add(EvacuationModel.OBSTACLE, i, 8);
+		 model.add(EvacuationModel.OBSTACLE, i, 12);
+	 }
+	 for(int i = 8; i < 13; i++) {
+		 if(i != 10) {
+			 model.add(EvacuationModel.OBSTACLE, 8, i);
+			 model.add(EvacuationModel.OBSTACLE, 13, i);
+		 }
+			 
+	 }
+	 //Corredores
+	 for(int i = 1; i < 8; i++) {
+		 if(i != 4)
+			 model.add(EvacuationModel.OBSTACLE, i, 8);
+		 model.add(EvacuationModel.OBSTACLE, i, 12);
+	 }
+	 for(int i = 14; i < model.width; i++) {
+		 if(i != 17)
+			 model.add(EvacuationModel.OBSTACLE, i, 8);
+		 model.add(EvacuationModel.OBSTACLE, i, 12);
+	 }
+	 model.add(EvacuationModel.OBSTACLE, 14, 1);
+	 model.add(EvacuationModel.OBSTACLE, 14, 3);
+	 model.add(EvacuationModel.OBSTACLE, 14, 4);
+	 model.add(EvacuationModel.OBSTACLE, 14, 5);
+	 model.add(EvacuationModel.OBSTACLE, 13, 5);
+	 model.add(EvacuationModel.OBSTACLE, 12, 5);
+	 model.add(EvacuationModel.OBSTACLE, 11, 5);
+	 model.add(EvacuationModel.OBSTACLE, 11, 6);
 	 model.add(EvacuationModel.OBSTACLE, 11, 7);
-	 model.add(EvacuationModel.OBSTACLE, 10, 7);
-	 model.add(EvacuationModel.OBSTACLE, 9, 7);
-	 model.add(EvacuationModel.OBSTACLE, 11, 11);
-	 model.add(EvacuationModel.OBSTACLE, 10, 11);
-	 model.add(EvacuationModel.OBSTACLE, 9, 11);
-	 model.add(EvacuationModel.OBSTACLE, 0, 0);
+	 model.add(EvacuationModel.OBSTACLE, 16, 1);
+	 model.add(EvacuationModel.OBSTACLE, 16, 2);
+	 model.add(EvacuationModel.OBSTACLE, 16, 3);
+	 model.add(EvacuationModel.OBSTACLE, 16, 4);
+	 model.add(EvacuationModel.OBSTACLE, 16, 5);
+	 model.add(EvacuationModel.OBSTACLE, 16, 6);
+	 model.add(EvacuationModel.OBSTACLE, 16, 7);
+	 
+	 model.add(EvacuationModel.EXIT_INFO, 9, 8);
 	 model.add(EvacuationModel.EXIT, 15, 0);
 	 return model;
 	}
+	
 	
 	//getModelo
 	public static EvacuationModel get() {

@@ -81,7 +81,24 @@ public class EvacuationGUI extends GridWorldView{
 			g.drawRect(rx, ry, rw, rh);
 	        g.fillRect(rx, ry, rw, rh);
 			break;
+		case EvacuationModel.EXIT_INFO:
+			draw_exitinfo(g,x,y);
 		}
+	}
+	
+	public void draw_exitinfo(Graphics g, int x, int y) {
+		g.setColor(Color.GREEN);
+		int[] vx = new int[4];
+		int[] vy = new int[4];
+		vx[0] = x * cellSizeW;
+		vy[0] = y * cellSizeH + (cellSizeH/4);
+		vx[1] = x * cellSizeW;
+		vy[1] = y * cellSizeH + (3*cellSizeH/4);
+		vx[2] = x * cellSizeW + cellSizeW;
+		vy[2] = y * cellSizeH + (3*cellSizeH/4);
+		vx[3] = x * cellSizeW + cellSizeW;
+		vy[3] = y * cellSizeH + (cellSizeH/4);
+		g.fillPolygon(vx,vy,4);
 	}
 	
 	public static void main(String[] args) throws Exception {

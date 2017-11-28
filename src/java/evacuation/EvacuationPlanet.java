@@ -1,5 +1,6 @@
 package evacuation;
 
+import java.util.List;
 import jason.asSyntax.*;
 import jason.environment.*;
 import jason.environment.grid.Location;
@@ -120,8 +121,8 @@ public class EvacuationPlanet extends Environment {
         // its location
         Location l = model.getAgPos(ag);
         addPercept(agName, Literal.parseLiteral("pos(" + l.x + "," + l.y + ")"));
-
-
+        //O que há a volta
+        updateAgPercept(agName, l, 4);
         // what's around
         /*
         updateAgPercept(agName, l.x - 1, l.y - 1);
@@ -134,8 +135,103 @@ public class EvacuationPlanet extends Environment {
         updateAgPercept(agName, l.x + 1, l.y);
         updateAgPercept(agName, l.x + 1, l.y + 1);*/
     }
-
-
+    
+    //Obter informação na zona L até um raio radius
+    private void updateAgPercept(String agName, Location agloc, int radius) {
+    	if(model == null)
+    		return;
+    	//boolean[][] vgrid = generateVisibilityGrid(agloc, radius); //Entrypoint para cálculo de visibilidade
+    }
+    
+    
+    private boolean[][] generateVisibilityGrid(Location l, int r) {
+    	//Inicializar uma grid de visualização
+    	boolean [][] vgrid = new boolean[2*r+1][2*r+1];
+    	Location agentCenter = new Location(r, r);
+    	for(int i = 0; i < r; i++) {
+    		for (int j = 0; j < r;j++) {
+    			vgrid[i][j] = false; //Não vísivel no ínicio
+    		}
+    	}
+    	int steps = 60; //Incrementos para o ângulo;
+    	double angleInc = (2*Math.PI)/steps;
+    	double xn,yn;
+    	int xr,yr;
+    	ArrayList<Location> points;
+    	for(int i = 0; i < steps; i++) {
+    		//Cálculo dos pontos finais do segmento de recta
+    		xn = l.x + l.x*Math.cos(angleInc*i);
+            yn = l.y + l.y*Math.sin(angleInc*i);
+            xr = (int)Math.floor(xn);
+            yr = (int)Math.floor(yn);
+            if((xn - xr) >= 0.5) {
+            	xr++;
+            }
+            if((yn - yr) >= 0.5) {
+            	yr++;
+            }
+            //Obter uma linha rasterizada compatível com a grid
+            points = generateRasterLine(l.x,l.y,xr,yr);
+            //Procurar por óbstaculos e mapear visibilidade
+            for(int j = 0; j < points.size(); j++) {
+            	Location pt = points.get(j);
+            	if(!model.inGrid(pt)) {
+            		break;
+            	}else if(model.hasObject(EvacuationModel.OBSTACLE, pt)) {
+            		vgrid[agentCenter.x+(pt.x-l.x)][agentCenter.y+(pt.y-l.y)] = true;
+            		break;
+            	}else {
+            		vgrid[agentCenter.x+(pt.x-l.x)][agentCenter.y+(pt.y-l.y)] = true;
+            	}
+            }
+    	}
+    	return vgrid;
+    }
+    
+    private ArrayList<Location> generateRasterLine(int x1,int y1,int x2,int y2) {
+    	ArrayList<Location> points = new ArrayList<Location>();
+    	// delta of exact value and rounded value of the dependent variable
+        int d = 0;
+ 
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+ 
+        int dx2 = 2 * dx; // slope scaling factors to
+        int dy2 = 2 * dy; // avoid floating point
+ 
+        int ix = x1 < x2 ? 1 : -1; // increment direction
+        int iy = y1 < y2 ? 1 : -1;
+ 
+        int x = x1;
+        int y = y1;
+        if(dx >= dy) {
+        	while(true) {
+        		if(x == x2)
+        			break;
+        		x += ix;
+        		d += dy2;
+        		if (d > dx) {
+                    y += iy;
+                    d -= dx2;
+                }
+        		points.add(new Location(x,y));
+        	}
+        }else {
+        	while (true) {
+                if (y == y2)
+                    break;
+                y += iy;
+                d += dx2;
+                if (d > dy) {
+                    x += ix;
+                    d -= dy2;
+                }
+                points.add(new Location(x,y));
+            }
+        }
+    	return points;
+    }
+    
   /*  private void updateAgPercept(String agName, int x, int y) {
         if (model == null || !model.inGrid(x,y)) return;
         if (model.hasObject(WorldModel.OBSTACLE, x, y)) {
@@ -152,4 +248,5 @@ public class EvacuationPlanet extends Environment {
             }
         }
     }*/
+    
 }
