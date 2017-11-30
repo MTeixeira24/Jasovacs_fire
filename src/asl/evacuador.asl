@@ -15,7 +15,14 @@ exit_direction(1).*/
 
 /* Plans */
 
-+!getPosition : true <- agentGetPosition; !walkto.
+
++!getPosition : true <- agentGetPosition; !see.//!walkto.
+
++!see_sign : cell(X, Y, exit_sign) <- .print("I spot an exit sign at ",X," ",Y);.wait(500); !see_danger.
++!see_sign : true <- !see_danger.
++!see_danger : cell(X, Y, danger) <- .print("I see danger at ",X," ",Y); .wait(500); !see.
++!see_danger : true <- !see.
++!see : true <- do(skip); .wait(500); !see_sign.
 
 /*Agente esta salvo e é removido*/
 +!walkto : pos(X,Y) & exit_location(EX, EY) & X = EX & Y = EY <- 

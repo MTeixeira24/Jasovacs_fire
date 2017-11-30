@@ -140,28 +140,28 @@ public class EvacuationPlanet extends Environment {
     private void updateAgPercept(String agName, Location agloc, int radius) {
     	if(model == null)
     		return;
-    	//boolean[][] vgrid = generateVisibilityGrid(agloc, radius); //Entrypoint para cálculo de visibilidade
+    	generateVisibilityGrid(agName, agloc, radius); //Entrypoint para cálculo de visibilidade
     }
     
     
-    private boolean[][] generateVisibilityGrid(Location l, int r) {
+    private void generateVisibilityGrid(String name, Location l, int r) {
     	//Inicializar uma grid de visualização
-    	boolean [][] vgrid = new boolean[2*r+1][2*r+1];
-    	Location agentCenter = new Location(r, r);
-    	for(int i = 0; i < r; i++) {
+    	//boolean [][] vgrid = new boolean[2*r+1][2*r+1];
+    	//Location agentCenter = new Location(r, r);
+    	/*for(int i = 0; i < r; i++) {
     		for (int j = 0; j < r;j++) {
     			vgrid[i][j] = false; //Não vísivel no ínicio
     		}
-    	}
-    	int steps = 60; //Incrementos para o ângulo;
+    	}*/
+    	int steps = 30; //Incrementos para o ângulo;
     	double angleInc = (2*Math.PI)/steps;
     	double xn,yn;
     	int xr,yr;
     	ArrayList<Location> points;
     	for(int i = 0; i < steps; i++) {
     		//Cálculo dos pontos finais do segmento de recta
-    		xn = l.x + l.x*Math.cos(angleInc*i);
-            yn = l.y + l.y*Math.sin(angleInc*i);
+    		xn = l.x + r*Math.cos(angleInc*i);
+            yn = l.y + r*Math.sin(angleInc*i);
             xr = (int)Math.floor(xn);
             yr = (int)Math.floor(yn);
             if((xn - xr) >= 0.5) {
@@ -177,15 +177,17 @@ public class EvacuationPlanet extends Environment {
             	Location pt = points.get(j);
             	if(!model.inGrid(pt)) {
             		break;
-            	}else if(model.hasObject(EvacuationModel.OBSTACLE, pt)) {
-            		vgrid[agentCenter.x+(pt.x-l.x)][agentCenter.y+(pt.y-l.y)] = true;
-            		break;
             	}else {
-            		vgrid[agentCenter.x+(pt.x-l.x)][agentCenter.y+(pt.y-l.y)] = true;
+            		//vgrid[agentCenter.x+(pt.x-l.x)][agentCenter.y+(pt.y-l.y)] = true;
+            		if(model.hasObject(EvacuationModel.EXIT_INFO, pt))
+            			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign)"));
+            		if(model.hasObject(EvacuationModel.DANGER, pt))
+            			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",danger)"));
+            		if(model.hasObject(EvacuationModel.OBSTACLE, pt)) 
+            			break;
             	}
             }
     	}
-    	return vgrid;
     }
     
     private ArrayList<Location> generateRasterLine(int x1,int y1,int x2,int y2) {
@@ -247,6 +249,28 @@ public class EvacuationPlanet extends Environment {
                 addPercept(agName, Literal.parseLiteral("cell(" + x + "," + y + ",ally)"));
             }
         }
+    }*/
+    
+   /* public static void main(String[] args) throws Exception {
+    	try {
+			model = EvacuationModel.world1();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	boolean [][] vgrid = generateVisibilityGrid(new Location(10,10), 3);
+    	
+    	for(int x = 0; x < 2*3 + 1; x++) {
+    		for(int y = 0; y < 2*3 + 1; y++) {
+    			if(vgrid[x][y])
+    				System.out.print(1 + " ");
+    			else
+    				System.out.print(0 + " ");
+    		}
+    		System.out.println();
+    	}
+    	
+    	return;
     }*/
     
 }

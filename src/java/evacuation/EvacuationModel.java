@@ -17,7 +17,7 @@ public class EvacuationModel extends GridWorldModel{
 	public static final int EXIT = 16;
 	public static final int EXIT_INFO = 32; //Informacao de saida
 	public static final int COLLAPSED_EXIT = 18; //Saida colapsada
-	public static final int DANGER = 20;
+	public static final int DANGER = 64;
 	public static final int DANGER_INFO = 21; //Informacao de perigo
 	public static final int SMOKE = 22; //Fumo
 	
@@ -100,8 +100,9 @@ public class EvacuationModel extends GridWorldModel{
 	 model.add(EvacuationModel.OBSTACLE, 16, 6);
 	 model.add(EvacuationModel.OBSTACLE, 16, 7);
 	 
-	 model.add(EvacuationModel.EXIT_INFO, 9, 8);
+	 model.add(EvacuationModel.EXIT_INFO, 10, 8);
 	 model.add(EvacuationModel.EXIT, 15, 0);
+	 model.add(EvacuationModel.DANGER, 10,11);
 	 return model;
 	}
 	

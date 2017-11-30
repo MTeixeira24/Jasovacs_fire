@@ -83,9 +83,18 @@ public class EvacuationGUI extends GridWorldView{
 			break;
 		case EvacuationModel.EXIT_INFO:
 			draw_exitinfo(g,x,y);
+			break;
+		case EvacuationModel.DANGER:
+			draw_danger(g,x,y);
+			break;
 		}
 	}
 	
+	private void draw_danger(Graphics g, int x, int y) {
+		g.setColor(Color.RED);
+		g.fillOval(x*cellSizeW+cellSizeW/8, y*cellSizeH+cellSizeH/8, cellSizeW-cellSizeW/4, cellSizeH-cellSizeH/4);
+		
+	}
 	public void draw_exitinfo(Graphics g, int x, int y) {
 		g.setColor(Color.GREEN);
 		int[] vx = new int[4];
