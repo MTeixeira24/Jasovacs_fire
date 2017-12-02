@@ -199,7 +199,7 @@ public class EvacuationPlanet extends Environment {
     			vgrid[i][j] = false; //Não vísivel no ínicio
     		}
     	}*/
-    	int steps = 30; //Incrementos para o ângulo;
+    	int steps = 10; //Incrementos para o ângulo;
     	double angleInc = (2*Math.PI)/steps;
     	double xn,yn;
     	int xr,yr;
