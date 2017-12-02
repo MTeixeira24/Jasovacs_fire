@@ -35,6 +35,7 @@ exit_direction(1).*/
 
 
 //+!wander : true <- randomwalk; .wait(500); !wander.  
++!wander : pos(X,Y) & cexit_location(XC, YC) & X=XC & Y=YC <- .print("I am safe"); exit;.my_name(N);.kill_agent(N).
 +!wander : pos(X,Y) & cell(XC,YC,danger) & X=XC & Y=YC <- .my_name(N); .print("I DEAD"); .kill_agent(N).
 +!wander : cell(X, Y, danger) <- .print("I saw danger, running"); !walkto.
 +!wander : true <- randomwalk; .wait(500); !wander.

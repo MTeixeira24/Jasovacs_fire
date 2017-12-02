@@ -132,7 +132,7 @@ public class EvacuationModel extends GridWorldModel{
 			 y= r.nextInt(model.height);
 			 
 		 }
-		 while(model.hasObject(EvacuationModel.OBSTACLE, x, y));
+		 while(model.hasObject(EvacuationModel.OBSTACLE, x, y)|| model.hasObject(EvacuationModel.DANGER, x, y) || model.hasObject(EvacuationModel.EXIT, x, y) );
 		 model.setAgPos(i, x, y); //Definir id e posição do agente no mundo
 	 }
 	 
