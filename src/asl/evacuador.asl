@@ -12,7 +12,7 @@ exit_direction(1).*/
 
 //!start.
 !getPosition. //Obter posição no mundo 
-!see. //Observar ambiente
+!see.
 
 /* Plans */
 
@@ -31,5 +31,8 @@ exit_direction(1).*/
 /* Obter direcção para mover*/											
 +!walkto : pos(X,Y) & exit_location(EX, EY) <- .wait(500);.print("Walking");jia.get_direction(X, Y, EX, EY, D); do(D); !walkto;.
 
-+!wander : cell(X, Y, danger) <- .print("I saw danger, running"); !walkto.
-+!wander : true <- randomwalk; .wait(500); !wander.  
+
+//+!wander : cell(X, Y, danger) <- .print("I saw danger, running"); !walkto.
+//+!wander : true <- randomwalk; .wait(500); !wander.  
++!wander : pos(X,Y) & cell(XC,YC,danger) & X=XC & Y=YC <- .my_name(N); .print("I DEAD"); kill_agent(N).
++!wander : true <- randomwalk; .wait(500); !wander.

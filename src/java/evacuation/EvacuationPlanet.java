@@ -1,6 +1,8 @@
 package evacuation;
 
 import java.util.List;
+
+import jason.asSemantics.Agent;
 import jason.asSyntax.*;
 import jason.environment.*;
 import jason.environment.grid.Location;
@@ -71,6 +73,11 @@ public class EvacuationPlanet extends Environment {
     		boolean isAgInPos=false;
     		
     		if(!da) {
+    			
+    			Object cenas= new Object();
+    			synchronized (cenas) {
+					
+				
     		do {
     			x = r.nextInt(3) - 1;
     			y = r.nextInt(3) - 1;
@@ -85,6 +92,7 @@ public class EvacuationPlanet extends Environment {
     		
         	
     		}while(hashObj || !isAgInPos);
+    		}
     		}
         	 /*try { Thread.sleep(100);}  catch (Exception e) {}*/
         	 if (action.equals(randomwalk)) {
