@@ -12,13 +12,14 @@ exit_direction(1).*/
 
 //!start.
 !getPosition. //Obter posição no mundo 
+!see. //Observar ambiente
 
 /* Plans */
 
 
 +!getPosition : true <- agentGetPosition; !walkto.
 
-+!see_sign : cell(X, Y, exit_sign) <- .print("I spot an exit sign at ",X," ",Y);.wait(500); !see_danger.
++!see_sign : cell(X, Y, exit_sign, D) <- .print("I spot an exit sign at ",X," ",Y," pointing ",D);.wait(500); !see_danger.
 +!see_sign : true <- !see_danger.
 +!see_danger : cell(X, Y, danger) <- .print("I see danger at ",X," ",Y); .wait(500); !see.
 +!see_danger : true <- !see.
