@@ -1,6 +1,7 @@
 package evacuation;
 
-import java.util.Set;
+import java.util.Enumeration;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import jason.environment.grid.GridWorldModel;
@@ -20,6 +21,7 @@ public class EvacuationModel extends GridWorldModel{
 	public static final int DANGER = 64;
 	public static final int DANGER_INFO = 21; //Informacao de perigo
 	public static final int SMOKE = 22; //Fumo
+	public static Vector<Location> spreadStack = new Vector<Location>();
 	
 	
     private String            id = "EvacuationModel";
@@ -102,7 +104,8 @@ public class EvacuationModel extends GridWorldModel{
 	 
 	 model.add(EvacuationModel.EXIT_INFO, 10, 8);
 	 model.add(EvacuationModel.EXIT, 15, 0);
-	 model.add(EvacuationModel.DANGER, 10,11);
+	 model.add(EvacuationModel.DANGER, 17,4);
+	 spreadStack.add(new Location(17,4));
 	 return model;
 	}
 	
@@ -141,4 +144,37 @@ public class EvacuationModel extends GridWorldModel{
         }
         return true;
     }
+	
+	boolean spreadFire() throws Exception{
+		Vector<Location> burnTiles = new Vector<Location>();
+		Location l, n;
+		for(int i = 0; i < spreadStack.size(); i++) {
+			l = spreadStack.get(i);
+			if(!model.inGrid(l) || model.hasObject(EvacuationModel.OBSTACLE, l)) {
+				continue;
+			}
+			n = new Location(l.x,l.y+1);
+			if(model.inGrid(n) && !model.hasObject(EvacuationModel.OBSTACLE,n) && !model.hasObject(EvacuationModel.DANGER,n)) {
+				burnTiles.add(n);
+				model.add(EvacuationModel.DANGER, n.x, n.y);
+			}
+			n = new Location(l.x,l.y-1);
+			if(model.inGrid(n) && !model.hasObject(EvacuationModel.OBSTACLE,n) && !model.hasObject(EvacuationModel.DANGER,n)) {
+				burnTiles.add(n);
+				model.add(EvacuationModel.DANGER, n.x, n.y);
+			}
+			n = new Location(l.x+1,l.y);
+			if(model.inGrid(n) && !model.hasObject(EvacuationModel.OBSTACLE,n) && !model.hasObject(EvacuationModel.DANGER,n)){
+				burnTiles.add(n);
+				model.add(EvacuationModel.DANGER, n.x, n.y);
+			}
+			n = new Location(l.x-1,l.y);
+			if(model.inGrid(n) && !model.hasObject(EvacuationModel.OBSTACLE,n) && !model.hasObject(EvacuationModel.DANGER,n)){
+				burnTiles.add(n);
+				model.add(EvacuationModel.DANGER, n.x, n.y);
+			}
+		}
+		spreadStack = burnTiles;
+		return true;
+	}
 }

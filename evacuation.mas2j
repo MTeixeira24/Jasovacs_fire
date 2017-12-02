@@ -6,6 +6,7 @@ MAS evacuation {
 
 	agents:
 		evacuador evacuador#2;
+		danger danger#1;
 
 	aslSourcePath:
 		"src/asl";

@@ -35,6 +35,7 @@ public class EvacuationPlanet extends Environment {
     Term					getPosition = Literal.parseLiteral("agentGetPosition");
     Term					exit = Literal.parseLiteral("exit");
     Term                    randomwalk     = Literal.parseLiteral("randomwalk");
+    Term					spread		=Literal.parseLiteral("spread");
     
     public enum Move {
         UP, DOWN, RIGHT, LEFT
@@ -49,10 +50,19 @@ public class EvacuationPlanet extends Environment {
     /*Executar as acçoes dos agentes*/
     @Override
     public boolean executeAction(String ag, Structure action) {
-    	boolean result = false;
+    	boolean result = false, da = false;
     	try {
     		Random r = new Random();
     		int agId = (Integer.parseInt(ag.substring(9))) - 1;
+
+        	if(ag.contains("danger")) {
+        		agId = -1;//(Integer.parseInt(ag.substring(5))) - 1;
+        		da = true;
+        	}else {
+        		agId = (Integer.parseInt(ag.substring(9))) - 1;
+        	}
+
+
         	Location l = model.getAgPos(agId);
         	int x;
         	int y;
@@ -97,15 +107,19 @@ public class EvacuationPlanet extends Environment {
              }else if(action.equals(getPosition)){
             	 updateAgPercept(agId);
             	 result = true;
+             }else if(action.equals(spread)) {
+            	 result = model.spreadFire();
              }else if(action.equals(exit)){
             	 model.setAgPos(agId, 0,0);
             	 result = true;
              }else{
             	 logger.info("executing: " + action + ", but not implemented!");
              }
-        	 if (result) {
+        	 if (result && !da) {
                  updateAgPercept(agId);
                  return true;
+             }else if(result && da) {
+            	 return true;
              }
     	} catch (InterruptedException e) {
         } catch (Exception e) {
