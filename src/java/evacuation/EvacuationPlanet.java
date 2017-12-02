@@ -232,6 +232,8 @@ public class EvacuationPlanet extends Environment {
             	}
             }
     	}
+    	if(model.hasObject(EvacuationModel.DANGER, l))
+			addPercept(name, Literal.parseLiteral("cell(" + l.x + "," + l.y + ",danger)"));
     }
     
     private ArrayList<Location> generateRasterLine(int x1,int y1,int x2,int y2) {

@@ -17,7 +17,7 @@ exit_direction(1).*/
 /* Plans */
 
 
-+!getPosition : true <- agentGetPosition; !walkto.
++!getPosition : true <- agentGetPosition; !wander.
 
 +!see_sign : cell(X, Y, exit_sign, D) <- .print("I spot an exit sign at ",X," ",Y," pointing ",D);.wait(500); !see_danger.
 +!see_sign : true <- !see_danger.
@@ -30,4 +30,6 @@ exit_direction(1).*/
 	.print("I am safe"); exit;.my_name(N);.kill_agent(N).
 /* Obter direcção para mover*/											
 +!walkto : pos(X,Y) & exit_location(EX, EY) <- .wait(500);.print("Walking");jia.get_direction(X, Y, EX, EY, D); do(D); !walkto;.
-//+!wander : true <- randomwalk; .wait(500); !wander.  
+
++!wander : cell(X, Y, danger) <- .print("I saw danger, running"); !walkto.
++!wander : true <- randomwalk; .wait(500); !wander.  
