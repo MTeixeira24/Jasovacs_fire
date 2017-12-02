@@ -51,9 +51,11 @@ public class EvacuationPlanet extends Environment {
     @Override
     public boolean executeAction(String ag, Structure action) {
     	boolean result = false, da = false;
+    	int x=0;
+    	int y=0;
     	try {
     		Random r = new Random();
-    		int agId = (Integer.parseInt(ag.substring(9))) - 1;
+    		int agId;
 
         	if(ag.contains("danger")) {
         		agId = -1;//(Integer.parseInt(ag.substring(5))) - 1;
@@ -64,11 +66,11 @@ public class EvacuationPlanet extends Environment {
 
 
         	Location l = model.getAgPos(agId);
-        	int x;
-        	int y;
+        	
     		boolean hashObj=true;
     		boolean isAgInPos=false;
     		
+    		if(!da) {
     		do {
     			x = r.nextInt(3) - 1;
     			y = r.nextInt(3) - 1;
@@ -80,18 +82,16 @@ public class EvacuationPlanet extends Environment {
     				isAgInPos=false;
     			}
         	//Verificar se outro agente já ocupa a mesma posicao
-        	
+    		
         	
     		}while(hashObj || !isAgInPos);
-        	
+    		}
         	 /*try { Thread.sleep(100);}  catch (Exception e) {}*/
         	 if (action.equals(randomwalk)) {
         		 
         		 
         		 if(!hashObj) {
         			 model.setAgPos(agId, l.x+x, l.y+y);
-        		 }else {
-        			 System.out.println("Can't Walk to: "+(l.x+x)+","+(l.y+y)+"\t");
         		 }
         		 result = true;
         	 }else if (action.equals(up)) {

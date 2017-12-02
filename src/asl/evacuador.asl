@@ -16,7 +16,7 @@ exit_direction(1).*/
 /* Plans */
 
 
-+!getPosition : true <- agentGetPosition; !see.//!walkto.
++!getPosition : true <- agentGetPosition; !walkto.
 
 +!see_sign : cell(X, Y, exit_sign) <- .print("I spot an exit sign at ",X," ",Y);.wait(500); !see_danger.
 +!see_sign : true <- !see_danger.

@@ -3,3 +3,4 @@
 .settings/*
 *.log
 bin/classes/*
+bin/evacuation.xml
