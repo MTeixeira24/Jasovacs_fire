@@ -5,7 +5,7 @@ MAS evacuation {
 	environment: evacuation.EvacuationPlanet
 
 	agents:
-		evacuador evacuador#2;
+		evacuador evacuador#30;
 		danger danger#1;
 
 	aslSourcePath:

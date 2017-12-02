@@ -1,11 +1,16 @@
 package evacuation;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Enumeration;
+import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Logger;
 
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
+import jason.mas2j.*;
+import jason.mas2j.parser.mas2j;
 import evacuation.EvacuationPlanet.Move;
 
 /*
@@ -47,9 +52,15 @@ public class EvacuationModel extends GridWorldModel{
 	
 	//Definição de um mundo, neste caso World1. Podemos acrescentar mais
 	static EvacuationModel world1() throws Exception {
-	 EvacuationModel model = EvacuationModel.create(20, 20, 2); 
-	 model.setAgPos(0, 10, 10); //Definir id e posição do agente no mundo
-	 model.setAgPos(1, 12, 9); //Definir id e posição do agente no mundo
+		
+		FileInputStream fis= new FileInputStream(new File("evacuation.mas2j"));
+		mas2j m2= new mas2j(fis);
+		MAS2JProject init= m2.mas();
+		int nEvacuadores=init.getAg("evacuador").getNbInstances();
+	 EvacuationModel model = EvacuationModel.create(20, 20, nEvacuadores); 
+	 
+	 
+	 
 	 //Rodear a zona de paredes
 	 //Obstacle é herdado de GridWorldModel
 	 for(int i = 0; i < model.width; i++) {
@@ -109,6 +120,22 @@ public class EvacuationModel extends GridWorldModel{
 	 model.add(EvacuationModel.EXIT, 15, 0);
 	 model.add(EvacuationModel.DANGER, 17,4);
 	 spreadStack.add(new Location(17,4));
+	 
+	 //Colocar agentes no mundo
+	 for (int i=0; i<nEvacuadores;i++) {
+		 //Definir posição
+		 int x,y;
+		 Random r= new Random();
+		 do {
+			 
+			 x= r.nextInt(model.width);
+			 y= r.nextInt(model.height);
+			 
+		 }
+		 while(model.hasObject(EvacuationModel.OBSTACLE, x, y));
+		 model.setAgPos(i, x, y); //Definir id e posição do agente no mundo
+	 }
+	 
 	 return model;
 	}
 	
