@@ -34,6 +34,7 @@ public class EvacuationGUI extends GridWorldView{
 	private static final long serialVersionUID = -5707099999380284737L;
 	//Guardar referencia ao controller
 	EvacuationPlanet env = null;
+	public enum orientation {UP, DOWN, LEFT, RIGHT};
 	
 	public EvacuationGUI(EvacuationModel model) {
 		/*
@@ -81,8 +82,17 @@ public class EvacuationGUI extends GridWorldView{
 			g.drawRect(rx, ry, rw, rh);
 	        g.fillRect(rx, ry, rw, rh);
 			break;
-		case EvacuationModel.EXIT_INFO:
-			draw_exitinfo(g,x,y);
+		case EvacuationModel.EXIT_INFO_UP:
+			draw_exitinfo(g,x,y,orientation.UP);
+			break;
+		case EvacuationModel.EXIT_INFO_DOWN:
+			draw_exitinfo(g,x,y,orientation.DOWN);
+			break;
+		case EvacuationModel.EXIT_INFO_LEFT:
+			draw_exitinfo(g,x,y,orientation.LEFT);
+			break;
+		case EvacuationModel.EXIT_INFO_RIGHT:
+			draw_exitinfo(g,x,y,orientation.RIGHT);
 			break;
 		case EvacuationModel.DANGER:
 			draw_danger(g,x,y);
@@ -95,7 +105,7 @@ public class EvacuationGUI extends GridWorldView{
 		g.fillOval(x*cellSizeW+cellSizeW/8, y*cellSizeH+cellSizeH/8, cellSizeW-cellSizeW/4, cellSizeH-cellSizeH/4);
 		
 	}
-	public void draw_exitinfo(Graphics g, int x, int y) {
+	public void draw_exitinfo(Graphics g, int x, int y, orientation dir) {
 		g.setColor(Color.GREEN);
 		int[] vx = new int[4];
 		int[] vy = new int[4];
@@ -108,6 +118,54 @@ public class EvacuationGUI extends GridWorldView{
 		vx[3] = x * cellSizeW + cellSizeW;
 		vy[3] = y * cellSizeH + (cellSizeH/4);
 		g.fillPolygon(vx,vy,4);
+		g.setColor(Color.WHITE);
+		int[] tpx = new int[3]; 
+		int[] tpy = new int[3];
+		switch(dir) {
+			case UP:
+				g.drawLine(x * cellSizeW + cellSizeW/2, y*cellSizeH + (cellSizeH/4), x * cellSizeW + cellSizeW/2, y*cellSizeH + (3*cellSizeH/4));
+				tpx[0] = x * cellSizeW + cellSizeW/2;
+				tpy[0] = y * cellSizeH + (cellSizeH/4);
+				tpx[1] = x * cellSizeW + cellSizeW/3;
+				tpy[1] = y * cellSizeH + (cellSizeH/2);
+				tpx[2] = x * cellSizeW + 2*(cellSizeW/3);
+				tpy[2] = y * cellSizeH + (cellSizeH/2);
+				g.fillPolygon(tpx, tpy, 3);
+				break;
+			case DOWN:
+				g.drawLine(x * cellSizeW + cellSizeW/2, y*cellSizeH + (cellSizeH/4), x * cellSizeW + cellSizeW/2, y*cellSizeH + (3*cellSizeH/4));
+				tpx[0] = x * cellSizeW + cellSizeW/2;
+				tpy[0] = y * cellSizeH + 3*(cellSizeH/4);
+				tpx[1] = x * cellSizeW + cellSizeW/3;
+				tpy[1] = y * cellSizeH + (cellSizeH/2);
+				tpx[2] = x * cellSizeW + 2*(cellSizeW/3);
+				tpy[2] = y * cellSizeH + (cellSizeH/2);
+				g.fillPolygon(tpx, tpy, 3);
+				break;
+			case LEFT:
+				g.drawLine(x * cellSizeW, y*cellSizeH + (cellSizeH/2), x * cellSizeW + cellSizeW, y*cellSizeH + (cellSizeH/2));
+				tpx[0] = x * cellSizeW;
+				tpy[0] = y * cellSizeH + cellSizeH/2;
+				tpx[1] = x * cellSizeW + cellSizeW/2;
+				tpy[1] = y * cellSizeH + (cellSizeH/4);
+				tpx[2] = x * cellSizeW + (cellSizeW/2);
+				tpy[2] = y * cellSizeH + 3*(cellSizeH/4);
+				g.fillPolygon(tpx, tpy, 3);
+				break;
+			case RIGHT:
+				g.drawLine(x * cellSizeW, y*cellSizeH + (cellSizeH/2), x * cellSizeW + cellSizeW, y*cellSizeH + (cellSizeH/2));
+				tpx[0] = x * cellSizeW + cellSizeW;
+				tpy[0] = y * cellSizeH + cellSizeH/2;
+				tpx[1] = x * cellSizeW + cellSizeW/2;
+				tpy[1] = y * cellSizeH + (cellSizeH/4);
+				tpx[2] = x * cellSizeW + (cellSizeW/2);
+				tpy[2] = y * cellSizeH + 3*(cellSizeH/4);
+				g.fillPolygon(tpx, tpy, 3);
+				break;
+			default:
+				
+				break;
+		}
 	}
 	
 	public static void main(String[] args) throws Exception {

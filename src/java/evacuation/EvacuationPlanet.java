@@ -189,8 +189,14 @@ public class EvacuationPlanet extends Environment {
             		break;
             	}else {
             		//vgrid[agentCenter.x+(pt.x-l.x)][agentCenter.y+(pt.y-l.y)] = true;
-            		if(model.hasObject(EvacuationModel.EXIT_INFO, pt))
-            			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign)"));
+            		if(model.hasObject(EvacuationModel.EXIT_INFO_UP, pt))
+            			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, up)"));
+            		if(model.hasObject(EvacuationModel.EXIT_INFO_DOWN, pt))
+            			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, down)"));
+            		if(model.hasObject(EvacuationModel.EXIT_INFO_LEFT, pt))
+            			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, left)"));
+            		if(model.hasObject(EvacuationModel.EXIT_INFO_RIGHT, pt))
+            			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, right)"));
             		if(model.hasObject(EvacuationModel.DANGER, pt))
             			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",danger)"));
             		if(model.hasObject(EvacuationModel.OBSTACLE, pt)) 

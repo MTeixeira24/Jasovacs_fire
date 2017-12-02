@@ -16,9 +16,12 @@ import evacuation.EvacuationPlanet.Move;
 public class EvacuationModel extends GridWorldModel{
 	
 	public static final int EXIT = 16;
-	public static final int EXIT_INFO = 32; //Informacao de saida
-	public static final int COLLAPSED_EXIT = 18; //Saida colapsada
+	public static final int EXIT_INFO_UP = 32; //Informacao de saida
 	public static final int DANGER = 64;
+	public static final int EXIT_INFO_DOWN = 128; //Informacao de saida
+	public static final int EXIT_INFO_RIGHT = 512; //Informacao de saida
+	public static final int COLLAPSED_EXIT = 1024; //Saida colapsada
+	public static final int EXIT_INFO_LEFT = 2048; //Informacao de saida
 	public static final int DANGER_INFO = 21; //Informacao de perigo
 	public static final int SMOKE = 22; //Fumo
 	public static Vector<Location> spreadStack = new Vector<Location>();
@@ -102,7 +105,7 @@ public class EvacuationModel extends GridWorldModel{
 	 model.add(EvacuationModel.OBSTACLE, 16, 6);
 	 model.add(EvacuationModel.OBSTACLE, 16, 7);
 	 
-	 model.add(EvacuationModel.EXIT_INFO, 10, 8);
+	 model.add(EvacuationModel.EXIT_INFO_UP, 10, 8);
 	 model.add(EvacuationModel.EXIT, 15, 0);
 	 model.add(EvacuationModel.DANGER, 17,4);
 	 spreadStack.add(new Location(17,4));
