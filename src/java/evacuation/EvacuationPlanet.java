@@ -51,20 +51,48 @@ public class EvacuationPlanet extends Environment {
     @Override
     public boolean executeAction(String ag, Structure action) {
     	boolean result = false, da = false;
+    	int x=0;
+    	int y=0;
     	try {
     		Random r = new Random();
-        	int x = r.nextInt(2) - 1, y = r.nextInt(2) - 1;
-        	int agId;
+    		int agId;
+
         	if(ag.contains("danger")) {
         		agId = -1;//(Integer.parseInt(ag.substring(5))) - 1;
         		da = true;
         	}else {
         		agId = (Integer.parseInt(ag.substring(9))) - 1;
         	}
+
+
         	Location l = model.getAgPos(agId);
+        	
+    		boolean hashObj=true;
+    		boolean isAgInPos=false;
+    		
+    		if(!da) {
+    		do {
+    			x = r.nextInt(3) - 1;
+    			y = r.nextInt(3) - 1;
+    			hashObj=model.hasObject(EvacuationModel.OBSTACLE,l.x+x, l.y+y);
+    			
+    			if(model.getAgAtPos(x+l.x, y+l.y)==-1) {
+    				isAgInPos=true;
+    			}else {
+    				isAgInPos=false;
+    			}
+        	//Verificar se outro agente já ocupa a mesma posicao
+    		
+        	
+    		}while(hashObj || !isAgInPos);
+    		}
         	 /*try { Thread.sleep(100);}  catch (Exception e) {}*/
         	 if (action.equals(randomwalk)) {
-        		 model.setAgPos(agId, l.x+x, l.y+y);
+        		 
+        		 
+        		 if(!hashObj) {
+        			 model.setAgPos(agId, l.x+x, l.y+y);
+        		 }
         		 result = true;
         	 }else if (action.equals(up)) {
                  result = model.move(Move.UP, agId);
