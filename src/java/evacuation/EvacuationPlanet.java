@@ -52,13 +52,37 @@ public class EvacuationPlanet extends Environment {
     	boolean result = false;
     	try {
     		Random r = new Random();
-        	int x = r.nextInt(2) - 1, y = r.nextInt(2) - 1;
-        	int agId = (Integer.parseInt(ag.substring(9))) - 1;
-        	
+    		int agId = (Integer.parseInt(ag.substring(9))) - 1;
         	Location l = model.getAgPos(agId);
+        	int x;
+        	int y;
+    		boolean hashObj=true;
+    		boolean isAgInPos=false;
+    		
+    		do {
+    			x = r.nextInt(3) - 1;
+    			y = r.nextInt(3) - 1;
+    			hashObj=model.hasObject(EvacuationModel.OBSTACLE,l.x+x, l.y+y);
+    			
+    			if(model.getAgAtPos(x+l.x, y+l.y)==-1) {
+    				isAgInPos=true;
+    			}else {
+    				isAgInPos=false;
+    			}
+        	//Verificar se outro agente já ocupa a mesma posicao
+        	
+        	
+    		}while(hashObj || !isAgInPos);
+        	
         	 /*try { Thread.sleep(100);}  catch (Exception e) {}*/
         	 if (action.equals(randomwalk)) {
-        		 model.setAgPos(agId, l.x+x, l.y+y);
+        		 
+        		 
+        		 if(!hashObj) {
+        			 model.setAgPos(agId, l.x+x, l.y+y);
+        		 }else {
+        			 System.out.println("Can't Walk to: "+(l.x+x)+","+(l.y+y)+"\t");
+        		 }
         		 result = true;
         	 }else if (action.equals(up)) {
                  result = model.move(Move.UP, agId);
