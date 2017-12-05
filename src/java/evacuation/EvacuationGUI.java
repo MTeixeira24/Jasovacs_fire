@@ -41,7 +41,7 @@ public class EvacuationGUI extends GridWorldView{
 		 * No controller temos de instanciar um modelo
 		 * antes de instanciar uma classe view
 		 */
-		super(model, "São pedrogão 2017, colorized", 600); //Modelo título e tamanho de janela
+		super(model, "São pedrogão 2017, colorized", 1024); //Modelo título e tamanho de janela
 		setVisible(true);
 		repaint();
 		

@@ -57,14 +57,14 @@ public class EvacuationModel extends GridWorldModel{
 		mas2j m2= new mas2j(fis);
 		MAS2JProject init= m2.mas();
 		int nEvacuadores=init.getAg("evacuador").getNbInstances();
-	 EvacuationModel model = EvacuationModel.create(20, 20, nEvacuadores); 
+	 EvacuationModel model = EvacuationModel.create(50, 50, nEvacuadores); 
 	 
 	 
 	 
 	 //Rodear a zona de paredes
 	 //Obstacle é herdado de GridWorldModel
 	 for(int i = 0; i < model.width; i++) {
-		 if(i != 15) 
+		 if(i != 25) 
 			 model.add(EvacuationModel.OBSTACLE, i, 0);
 		 model.add(EvacuationModel.OBSTACLE, i, model.height - 1);
 	 }
@@ -73,53 +73,24 @@ public class EvacuationModel extends GridWorldModel{
 		 model.add(EvacuationModel.OBSTACLE, model.width - 1, i);
 	 }
 	 
-	 //Criar compartimentos dentro da nossa zona
-	 //Sala inicial
-	 boolean open = true;
-	 for(int i = 8; i < 14; i++) {
-		 if(!(open && i == 12))
-			 model.add(EvacuationModel.OBSTACLE, i, 8);
-		 model.add(EvacuationModel.OBSTACLE, i, 12);
-	 }
-	 for(int i = 8; i < 13; i++) {
-		 if(i != 10) {
-			 model.add(EvacuationModel.OBSTACLE, 8, i);
-			 model.add(EvacuationModel.OBSTACLE, 13, i);
-		 }
-			 
-	 }
-	 //Corredores
-	 for(int i = 1; i < 8; i++) {
-		 if(i != 4)
-			 model.add(EvacuationModel.OBSTACLE, i, 8);
-		 model.add(EvacuationModel.OBSTACLE, i, 12);
-	 }
-	 for(int i = 14; i < model.width; i++) {
-		 if(i != 17)
-			 model.add(EvacuationModel.OBSTACLE, i, 8);
-		 model.add(EvacuationModel.OBSTACLE, i, 12);
-	 }
-	 model.add(EvacuationModel.OBSTACLE, 14, 1);
-	 model.add(EvacuationModel.OBSTACLE, 14, 3);
-	 model.add(EvacuationModel.OBSTACLE, 14, 4);
-	 model.add(EvacuationModel.OBSTACLE, 14, 5);
-	 model.add(EvacuationModel.OBSTACLE, 13, 5);
-	 model.add(EvacuationModel.OBSTACLE, 12, 5);
-	 model.add(EvacuationModel.OBSTACLE, 11, 5);
-	 model.add(EvacuationModel.OBSTACLE, 11, 6);
-	 model.add(EvacuationModel.OBSTACLE, 11, 7);
-	 model.add(EvacuationModel.OBSTACLE, 16, 1);
-	 model.add(EvacuationModel.OBSTACLE, 16, 2);
-	 model.add(EvacuationModel.OBSTACLE, 16, 3);
-	 model.add(EvacuationModel.OBSTACLE, 16, 4);
-	 model.add(EvacuationModel.OBSTACLE, 16, 5);
-	 model.add(EvacuationModel.OBSTACLE, 16, 6);
-	 model.add(EvacuationModel.OBSTACLE, 16, 7);
 	 
-	 model.add(EvacuationModel.EXIT_INFO_UP, 10, 8);
-	 model.add(EvacuationModel.EXIT, 15, 0);
-	 model.add(EvacuationModel.DANGER, 17,4);
-	 spreadStack.add(new Location(17,4));
+	 for(int z = 5; z <= 45; z += 5) {
+		 for(int i = 0, j = 49; i < 22; i++, j--) {
+			 model.add(EvacuationModel.OBSTACLE, i, z);
+			 model.add(EvacuationModel.OBSTACLE, j, z);
+		 }
+	 }
+	 for(int z = 5; z <= 45; z += 5) {
+		 for(int i = 2, j = 47; i < 15; i+=8, j-=8) {
+			 model.add(EvacuationModel.EXIT_INFO_RIGHT, i, z);
+			 model.add(EvacuationModel.EXIT_INFO_LEFT, j, z);
+		 }
+		 model.add(EvacuationModel.EXIT_INFO_UP, 21, z);
+		 model.add(EvacuationModel.EXIT_INFO_UP, 28, z);
+	 }
+	 model.add(EvacuationModel.EXIT, 25, 0);
+	 model.add(EvacuationModel.DANGER, 42,48);
+	 spreadStack.add(new Location(42,48));
 	 
 	 //Colocar agentes no mundo
 	 for (int i=0; i<nEvacuadores;i++) {

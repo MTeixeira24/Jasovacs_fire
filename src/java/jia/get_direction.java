@@ -38,12 +38,17 @@ public class get_direction extends DefaultInternalAction {
             int iagy = (int)((NumberTerm)terms[1]).solve();//Atual
             int itox = (int)((NumberTerm)terms[2]).solve();//Destino
             int itoy = (int)((NumberTerm)terms[3]).solve();//Destino
-            
+            System.out.println(iagx);
+            System.out.println(iagy);
+            System.out.println(itox);
+            System.out.println(itoy);
             if(model.inGrid(itox, itoy)) {
+            	
             	Busca searchAlg = new AEstrela();
             	Location lini = new Location(iagx, iagy);
             	
             	Nodo solution = searchAlg.busca(new GridState(lini, lini, new Location(itox, itoy), model, "initial"));
+            	System.out.println(solution.toString());
             	if(solution != null) {
             		Nodo root = solution;
                     Estado prev1 = null;

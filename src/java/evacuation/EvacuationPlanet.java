@@ -58,46 +58,42 @@ public class EvacuationPlanet extends Environment {
     	try {
     		Random r = new Random();
     		int agId;
-
         	if(ag.contains("danger")) {
         		agId = -1;//(Integer.parseInt(ag.substring(5))) - 1;
         		da = true;
         	}else {
         		agId = (Integer.parseInt(ag.substring(9))) - 1;
         	}
-
-
         	Location l = model.getAgPos(agId);
-        	
     		boolean hashObj=true;
     		boolean isAgInPos=false;
-    		
     		if(!da) {
-    			
     			Object cenas= new Object();
     			synchronized (cenas) {
-					
-				
-    		do {
-    			x = r.nextInt(3) - 1;
-    			y = r.nextInt(3) - 1;
-    			hashObj=model.hasObject(EvacuationModel.OBSTACLE,l.x+x, l.y+y);
-    			
-    			if(model.getAgAtPos(x+l.x, y+l.y)==-1) {
-    				isAgInPos=true;
-    			}else {
-    				isAgInPos=false;
+		    		do {
+		    			x = r.nextInt(3) - 1;
+		    			y = r.nextInt(3) - 1;
+		    			hashObj=model.hasObject(EvacuationModel.OBSTACLE,l.x+x, l.y+y);
+		    			
+		    			if(model.getAgAtPos(x+l.x, y+l.y)==-1) {
+		    				isAgInPos=true;
+		    			}else {
+		    				isAgInPos=false;
+		    			}
+		        	//Verificar se outro agente já ocupa a mesma posicao
+		    		}while(hashObj || !isAgInPos);
     			}
-        	//Verificar se outro agente já ocupa a mesma posicao
-    		
-        	
-    		}while(hashObj || !isAgInPos);
-    		}
     		}
         	 /*try { Thread.sleep(100);}  catch (Exception e) {}*/
-        	 if (action.equals(randomwalk)) {
-        		 
-        		 
+    		 if (action.getFunctor().equals("exit_location")) {
+    			 System.out.println(action.getTerm(0).toString());
+    			 String exitx = action.getTerm(0).toString();
+    			 String exity = action.getTerm(1).toString();
+    			 /*Update do local de saída*/
+    			 removePerceptsByUnif(ag, Literal.parseLiteral("exit_location(_,_)"));
+    			 addPercept(ag, Literal.parseLiteral("exit_location("+exitx+","+exity+")"));
+    			 result = true;
+    		 }else if (action.equals(randomwalk)) {
         		 if(!hashObj) {
         			 model.setAgPos(agId, l.x+x, l.y+y);
         		 }
@@ -117,6 +113,7 @@ public class EvacuationPlanet extends Environment {
             	 result = true;
              }else if(action.equals(spread)) {
             	 result = model.spreadFire();
+            	 result = true;
              }else if(action.equals(exit)){
             	 model.setAgPos(agId, 0,0);
             	 result = true;
@@ -163,23 +160,15 @@ public class EvacuationPlanet extends Environment {
     }
 
     private void updateAgPercept(String agName, int ag) {
-        clearPercepts(agName);
+        //clearPercepts(agName);
+     	removePerceptsByUnif(agName, Literal.parseLiteral("pos(_,_)"));
+     	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,_)"));
+     	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,_,_)"));
         // its location
         Location l = model.getAgPos(ag);
         addPercept(agName, Literal.parseLiteral("pos(" + l.x + "," + l.y + ")"));
         //O que há a volta
-        updateAgPercept(agName, l, 4);
-        // what's around
-        /*
-        updateAgPercept(agName, l.x - 1, l.y - 1);
-        updateAgPercept(agName, l.x - 1, l.y);
-        updateAgPercept(agName, l.x - 1, l.y + 1);
-        updateAgPercept(agName, l.x, l.y - 1);
-        updateAgPercept(agName, l.x, l.y);
-        updateAgPercept(agName, l.x, l.y + 1);
-        updateAgPercept(agName, l.x + 1, l.y - 1);
-        updateAgPercept(agName, l.x + 1, l.y);
-        updateAgPercept(agName, l.x + 1, l.y + 1);*/
+        updateAgPercept(agName, l, 8);
     }
     
     //Obter informação na zona L até um raio radius
@@ -191,15 +180,7 @@ public class EvacuationPlanet extends Environment {
     
     
     private void generateVisibilityGrid(String name, Location l, int r) {
-    	//Inicializar uma grid de visualização
-    	//boolean [][] vgrid = new boolean[2*r+1][2*r+1];
-    	//Location agentCenter = new Location(r, r);
-    	/*for(int i = 0; i < r; i++) {
-    		for (int j = 0; j < r;j++) {
-    			vgrid[i][j] = false; //Não vísivel no ínicio
-    		}
-    	}*/
-    	int steps = 10; //Incrementos para o ângulo;
+    	int steps = 8; //Incrementos para o ângulo;
     	double angleInc = (2*Math.PI)/steps;
     	double xn,yn;
     	int xr,yr;
@@ -235,6 +216,10 @@ public class EvacuationPlanet extends Environment {
             			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, right)"));
             		if(model.hasObject(EvacuationModel.DANGER, pt))
             			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",danger)"));
+            		if(model.hasObject(EvacuationModel.EXIT, pt)) {
+            			addPercept(name, Literal.parseLiteral("cell("+pt.x+","+pt.y+",exit)"));
+            			addPercept(name, Literal.parseLiteral("knowExit"));
+            		}
             		if(model.hasObject(EvacuationModel.OBSTACLE, pt)) 
             			break;
             	}
@@ -287,44 +272,5 @@ public class EvacuationPlanet extends Environment {
         }
     	return points;
     }
-    
-  /*  private void updateAgPercept(String agName, int x, int y) {
-        if (model == null || !model.inGrid(x,y)) return;
-        if (model.hasObject(WorldModel.OBSTACLE, x, y)) {
-            addPercept(agName, Literal.parseLiteral("cell(" + x + "," + y + ",obstacle)"));
-        } else {
-            if (model.hasObject(WorldModel.GOLD, x, y)) {
-                addPercept(agName, Literal.parseLiteral("cell(" + x + "," + y + ",gold)"));
-            }
-            if (model.hasObject(WorldModel.ENEMY, x, y)) {
-                addPercept(agName, Literal.parseLiteral("cell(" + x + "," + y + ",enemy)"));
-            }
-            if (model.hasObject(WorldModel.AGENT, x, y)) {
-                addPercept(agName, Literal.parseLiteral("cell(" + x + "," + y + ",ally)"));
-            }
-        }
-    }*/
-    
-   /* public static void main(String[] args) throws Exception {
-    	try {
-			model = EvacuationModel.world1();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	boolean [][] vgrid = generateVisibilityGrid(new Location(10,10), 3);
-    	
-    	for(int x = 0; x < 2*3 + 1; x++) {
-    		for(int y = 0; y < 2*3 + 1; y++) {
-    			if(vgrid[x][y])
-    				System.out.print(1 + " ");
-    			else
-    				System.out.print(0 + " ");
-    		}
-    		System.out.println();
-    	}
-    	
-    	return;
-    }*/
     
 }
