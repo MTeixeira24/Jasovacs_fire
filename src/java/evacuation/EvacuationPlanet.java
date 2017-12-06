@@ -83,7 +83,6 @@ public class EvacuationPlanet extends Environment {
     		}
         	 /*try { Thread.sleep(100);}  catch (Exception e) {}*/
     		 if (action.getFunctor().equals("set_exit_location")) {
-    			 System.out.println(action.getTerm(0).toString());
     			 String exitx = action.getTerm(0).toString();
     			 String exity = action.getTerm(1).toString();
     			 /*Update do local de saída*/
@@ -181,8 +180,8 @@ public class EvacuationPlanet extends Environment {
     private void updateAgPercept(String agName, int ag) {
         //clearPercepts(agName);
      	removePerceptsByUnif(agName, Literal.parseLiteral("pos(_,_)"));
-     	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,_)"));
-     	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,_,_)"));
+     	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,danger)"));
+     	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,exit_sign,_)"));
         // its location
         Location l = model.getAgPos(ag);
         addPercept(agName, Literal.parseLiteral("pos(" + l.x + "," + l.y + ")"));
