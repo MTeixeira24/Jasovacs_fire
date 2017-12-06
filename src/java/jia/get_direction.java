@@ -48,7 +48,6 @@ public class get_direction extends DefaultInternalAction {
             	Location lini = new Location(iagx, iagy);
             	
             	Nodo solution = searchAlg.busca(new GridState(lini, lini, new Location(itox, itoy), model, "initial"));
-            	System.out.println(solution.toString());
             	if(solution != null) {
             		Nodo root = solution;
                     Estado prev1 = null;

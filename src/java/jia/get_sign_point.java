@@ -19,13 +19,13 @@ public class get_sign_point extends DefaultInternalAction {
 	        int iagy = (int)((NumberTerm)terms[1]).solve();//Atual
 	        String dir = terms[2].toString();
 	        if(dir.equals("up")) {
-	        	result = (un.unifies(terms[3], new Atom(String.valueOf(1))) && un.unifies(terms[4], new Atom(String.valueOf(iagy))));  	
+	        	result = (un.unifies(terms[3], new Atom(String.valueOf(iagx))) && un.unifies(terms[4], new Atom(String.valueOf(1))));  	
 	        }else if(dir.equals("down")) {
-	        	result = (un.unifies(terms[3], new Atom(String.valueOf(49))) && un.unifies(terms[4], new Atom(String.valueOf(iagy))));
+	        	result = (un.unifies(terms[3], new Atom(String.valueOf(iagx))) && un.unifies(terms[4], new Atom(String.valueOf(48))));
 	        }else if(dir.equals("left")) {
-	        	result = (un.unifies(terms[3], new Atom(String.valueOf(iagx))) && un.unifies(terms[4], new Atom(String.valueOf(1))));
+	        	result = (un.unifies(terms[3], new Atom(String.valueOf(1))) && un.unifies(terms[4], new Atom(String.valueOf(iagy))));
 	        }else if(dir.equals("right")) {
-	        	result = (un.unifies(terms[3], new Atom(String.valueOf(iagx))) && un.unifies(terms[4], new Atom(String.valueOf(49))));
+	        	result = (un.unifies(terms[3], new Atom(String.valueOf(48))) && un.unifies(terms[4], new Atom(String.valueOf(iagy))));
 	        }
 	        return result;
 	        

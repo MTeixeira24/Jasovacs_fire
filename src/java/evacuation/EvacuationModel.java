@@ -2,10 +2,9 @@ package evacuation;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
-import java.util.logging.Logger;
 
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
@@ -30,6 +29,7 @@ public class EvacuationModel extends GridWorldModel{
 	public static final int DANGER_INFO = 21; //Informacao de perigo
 	public static final int SMOKE = 22; //Fumo
 	public static Vector<Location> spreadStack = new Vector<Location>();
+	public ArrayList<Object[]> exitdata = new ArrayList<Object[]>();
 	
 	
     private String            id = "EvacuationModel";

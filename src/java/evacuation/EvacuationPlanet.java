@@ -1,17 +1,14 @@
 package evacuation;
 
-import java.util.List;
 
 import jason.asSemantics.Agent;
 import jason.asSyntax.*;
 import jason.environment.*;
 import jason.environment.grid.Location;
+import jason.stdlib.foreach;
 
 import java.util.logging.*;
 import java.util.*;
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
 
 /*
  * Classe que funciona como um controller
@@ -65,14 +62,14 @@ public class EvacuationPlanet extends Environment {
         		agId = (Integer.parseInt(ag.substring(9))) - 1;
         	}
         	Location l = model.getAgPos(agId);
-    		boolean hashObj=true;
-    		boolean isAgInPos=false;
+    		boolean hashObj=true, isAgInPos=false, negative = true;
     		if(!da) {
     			Object cenas= new Object();
     			synchronized (cenas) {
 		    		do {
-		    			x = r.nextInt(3) - 1;
-		    			y = r.nextInt(3) - 1;
+		    			x = r.nextInt(3)-1;
+		    			y = r.nextInt(3)-1;
+		    			negative = (l.x+x < 0 || l.y - y < 0) ? true : false;
 		    			hashObj=model.hasObject(EvacuationModel.OBSTACLE,l.x+x, l.y+y);
 		    			
 		    			if(model.getAgAtPos(x+l.x, y+l.y)==-1) {
@@ -81,11 +78,11 @@ public class EvacuationPlanet extends Environment {
 		    				isAgInPos=false;
 		    			}
 		        	//Verificar se outro agente já ocupa a mesma posicao
-		    		}while(hashObj || !isAgInPos);
+		    		}while(hashObj || !isAgInPos || negative);
     			}
     		}
         	 /*try { Thread.sleep(100);}  catch (Exception e) {}*/
-    		 if (action.getFunctor().equals("exit_location")) {
+    		 if (action.getFunctor().equals("set_exit_location")) {
     			 System.out.println(action.getTerm(0).toString());
     			 String exitx = action.getTerm(0).toString();
     			 String exity = action.getTerm(1).toString();
@@ -116,6 +113,28 @@ public class EvacuationPlanet extends Environment {
             	 result = true;
              }else if(action.equals(exit)){
             	 model.setAgPos(agId, 0,0);
+            	 String plist = consultPercepts(ag).toString();
+            	 System.out.println(plist);
+            	 plist = plist.substring(1, plist.length() - 1);
+            	 System.out.println(plist);
+            	 String[] perceps = plist.split(", ");
+            	 System.out.println(perceps);
+            	 String eloc = "", pos = "";
+            	 boolean knowExit = false;
+            	 for(int i = 0; i < perceps.length; i++) {
+            		 if(perceps[i].contains("exit_location")) {
+            			 eloc = perceps[i];
+            		 }
+            		 if(perceps[i].contains("pos")) {
+            			 pos = perceps[i];
+            		 }
+            		 if(perceps[i].equals("knowExit(yes)")) {
+            			 knowExit = true;
+            		 }
+            	 }
+            	 Object [] stats = new Object[] {ag,pos,eloc,knowExit};
+            	 model.exitdata.add(stats);
+            	 gui.updateTable(stats);
             	 result = true;
              }else{
             	 logger.info("executing: " + action + ", but not implemented!");
@@ -180,7 +199,7 @@ public class EvacuationPlanet extends Environment {
     
     
     private void generateVisibilityGrid(String name, Location l, int r) {
-    	int steps = 8; //Incrementos para o ângulo;
+    	int steps = 16; //Incrementos para o ângulo;
     	double angleInc = (2*Math.PI)/steps;
     	double xn,yn;
     	int xr,yr;
@@ -206,19 +225,31 @@ public class EvacuationPlanet extends Environment {
             		break;
             	}else {
             		//vgrid[agentCenter.x+(pt.x-l.x)][agentCenter.y+(pt.y-l.y)] = true;
-            		if(model.hasObject(EvacuationModel.EXIT_INFO_UP, pt))
+            		if(model.hasObject(EvacuationModel.EXIT_INFO_UP, pt)) {
             			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, up)"));
-            		if(model.hasObject(EvacuationModel.EXIT_INFO_DOWN, pt))
+            			addPercept(name, Literal.parseLiteral("seen_exit_sign(yes)"));
+            		}
+            			
+            		if(model.hasObject(EvacuationModel.EXIT_INFO_DOWN, pt)) {
             			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, down)"));
-            		if(model.hasObject(EvacuationModel.EXIT_INFO_LEFT, pt))
+            			addPercept(name, Literal.parseLiteral("seen_exit_sign(yes)"));
+            		}
+            			
+            		if(model.hasObject(EvacuationModel.EXIT_INFO_LEFT, pt)) {
             			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, left)"));
-            		if(model.hasObject(EvacuationModel.EXIT_INFO_RIGHT, pt))
+            			addPercept(name, Literal.parseLiteral("seen_exit_sign(yes)"));
+            		}
+            			
+            		if(model.hasObject(EvacuationModel.EXIT_INFO_RIGHT, pt)) {
             			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",exit_sign, right)"));
+            			addPercept(name, Literal.parseLiteral("seen_exit_sign(yes)"));
+            		}
+            			
             		if(model.hasObject(EvacuationModel.DANGER, pt))
             			addPercept(name, Literal.parseLiteral("cell(" + pt.x + "," + pt.y + ",danger)"));
             		if(model.hasObject(EvacuationModel.EXIT, pt)) {
             			addPercept(name, Literal.parseLiteral("cell("+pt.x+","+pt.y+",exit)"));
-            			addPercept(name, Literal.parseLiteral("knowExit"));
+            			addPercept(name, Literal.parseLiteral("knowExit(yes)"));
             		}
             		if(model.hasObject(EvacuationModel.OBSTACLE, pt)) 
             			break;

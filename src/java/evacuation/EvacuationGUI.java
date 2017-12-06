@@ -4,24 +4,19 @@ import jason.environment.grid.GridWorldView;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.Hashtable;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /*
  * 
@@ -35,13 +30,15 @@ public class EvacuationGUI extends GridWorldView{
 	//Guardar referencia ao controller
 	EvacuationPlanet env = null;
 	public enum orientation {UP, DOWN, LEFT, RIGHT};
+	private DefaultTableModel db;
+	private JTable table;
 	
 	public EvacuationGUI(EvacuationModel model) {
 		/*
 		 * No controller temos de instanciar um modelo
 		 * antes de instanciar uma classe view
 		 */
-		super(model, "São pedrogão 2017, colorized", 1024); //Modelo título e tamanho de janela
+		super(model, "São pedrogão 2017, colorized", 800); //Modelo título e tamanho de janela
 		setVisible(true);
 		repaint();
 		
@@ -60,6 +57,25 @@ public class EvacuationGUI extends GridWorldView{
 		 * Nota: as classes views estendem a classe GridWorldView
 		 * que já possuem um objecto canvas instanciado
 		 */
+		JPanel sp =  new JPanel(new FlowLayout(FlowLayout.CENTER));
+		sp.setBorder(BorderFactory.createEtchedBorder());
+		sp.add(new JLabel("ExitInformation:"));
+		db = new DefaultTableModel();
+		db.addColumn("Agent");
+		db.addColumn("Pos");
+		db.addColumn("PosExit");
+		db.addColumn("knowLocation");
+		table = new JTable(db);
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setPreferredSize(new Dimension(500,100));
+		table.setFillsViewportHeight(true);
+		sp.add(scrollPane);
+		args.add(sp);
+		getContentPane().add(BorderLayout.SOUTH, sp);
+	}
+	
+	public void updateTable(Object[] l) {
+		db.addRow(l);
 	}
 	
 	//Desenho do agente representado por um ponto numa grid canvas
