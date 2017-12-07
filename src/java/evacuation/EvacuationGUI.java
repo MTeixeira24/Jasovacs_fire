@@ -44,24 +44,27 @@ public class EvacuationGUI extends GridWorldView{
 	EvacuationPlanet env = null;
 	public enum orientation {UP, DOWN, LEFT, RIGHT};
 	private DefaultTableModel db;
+	static int selectedModel = 1;
 	private JTable table;
 	private JLabel    jlMouseLoc;
 	private JLabel 	jTimePassed;
+	private JComboBox scenarios;
 	private double startTime = System.nanoTime();
 	
-	public EvacuationGUI(EvacuationModel model) {
+	public EvacuationGUI(EvacuationModel model, int i) {
 		/*
 		 * No controller temos de instanciar um modelo
 		 * antes de instanciar uma classe view
 		 */
 		super(model, "São pedrogão 2017, colorized", 800); //Modelo título e tamanho de janela
+        selectedModel = i;
 		setVisible(true);
 		repaint();
 		
 	}
 	public void setEnv(EvacuationPlanet env) {
         this.env = env;
-        //scenarios.setSelectedIndex(env.getSimId()-1);
+        scenarios.setSelectedIndex(env.getSimId()-1);
     }
 	
 	@Override
@@ -89,10 +92,12 @@ public class EvacuationGUI extends GridWorldView{
 		sp.add(scrollPane);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p.setBorder(BorderFactory.createEtchedBorder());
-        final JComboBox scenarios = new JComboBox();
+        scenarios = new JComboBox();
         for(int i = 1; i<=2;i++) {
         	scenarios.addItem(i);
         }
+        System.out.println(selectedModel);
+        //scenarios.setSelectedIndex(selectedModel - 1);
         JPanel lp = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel cp = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel rp = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -134,6 +139,7 @@ public class EvacuationGUI extends GridWorldView{
 		scenarios.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ievt) {
                 int w = ((Integer)scenarios.getSelectedItem()).intValue();
+                System.out.println(env.getSimId());
                 if (env != null && env.getSimId() != w) {
                     env.endSimulation();
                     env.initWorld(w);

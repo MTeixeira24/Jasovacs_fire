@@ -192,8 +192,9 @@ public class EvacuationPlanet extends Environment {
 			e.printStackTrace();
 		}
     	clearPercepts();
+    	simId = w;
     	if(gui != null) gui.dispose();
-    	gui = new EvacuationGUI(model);
+    	gui = new EvacuationGUI(model,w);
     	gui.setEnv(this);
     	
     }
