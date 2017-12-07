@@ -1,20 +1,33 @@
 package evacuation;
 
 import jason.environment.grid.GridWorldView;
+import jason.environment.grid.Location;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -32,6 +45,9 @@ public class EvacuationGUI extends GridWorldView{
 	public enum orientation {UP, DOWN, LEFT, RIGHT};
 	private DefaultTableModel db;
 	private JTable table;
+	private JLabel    jlMouseLoc;
+	private JLabel 	jTimePassed;
+	private double startTime = System.nanoTime();
 	
 	public EvacuationGUI(EvacuationModel model) {
 		/*
@@ -59,19 +75,86 @@ public class EvacuationGUI extends GridWorldView{
 		 */
 		JPanel sp =  new JPanel(new FlowLayout(FlowLayout.CENTER));
 		sp.setBorder(BorderFactory.createEtchedBorder());
-		sp.add(new JLabel("ExitInformation:"));
+		//sp.add(new JLabel("ExitInformation:"));
 		db = new DefaultTableModel();
 		db.addColumn("Agent");
 		db.addColumn("Pos");
 		db.addColumn("PosExit");
-		db.addColumn("knowLocation");
+		db.addColumn("knowExit");
+		db.addColumn("Status");
 		table = new JTable(db);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setPreferredSize(new Dimension(500,100));
 		table.setFillsViewportHeight(true);
 		sp.add(scrollPane);
+		JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        p.setBorder(BorderFactory.createEtchedBorder());
+        final JComboBox scenarios = new JComboBox();
+        for(int i = 1; i<=2;i++) {
+        	scenarios.addItem(i);
+        }
+        JPanel lp = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel cp = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel rp = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        lp.add(new JLabel("Scenarios:"));
+        lp.add(scenarios);
+        cp.add(new JLabel("Selected coords"));
+        jlMouseLoc = new JLabel("0,0)");
+        cp.add(jlMouseLoc);
+        rp.add(new JLabel("Elapsed time: "));
+        jTimePassed = new JLabel("00:00");
+        rp.add(jTimePassed);
+        p.add(lp);
+        p.add(cp);
+        p.add(rp);
+        args.add(p);
 		args.add(sp);
-		getContentPane().add(BorderLayout.SOUTH, sp);
+		getContentPane().add(BorderLayout.SOUTH, args);
+		ActionListener taskPerformer = new ActionListener() {
+		      public void actionPerformed(ActionEvent evt) {
+		          int elapse = (int) Math.floor((System.nanoTime() - startTime)/1000000);
+		          String timeFormat = "00:00";
+		          Date date = new Date(elapse);
+		          DateFormat formatter = new SimpleDateFormat("mm:ss");
+		          timeFormat = formatter.format(date);
+		          jTimePassed.setText(timeFormat);
+		      }
+		};
+		new Timer(1000, taskPerformer).start();
+		getCanvas().addMouseMotionListener(new MouseMotionListener() {
+            public void mouseDragged(MouseEvent e) { }
+            public void mouseMoved(MouseEvent e) {
+                int col = e.getX() / cellSizeW;
+                int lin = e.getY() / cellSizeH;
+                if (col >= 0 && lin >= 0 && col < getModel().getWidth() && lin < getModel().getHeight()) {
+                    jlMouseLoc.setText("("+col+","+lin+")");
+                }
+            }
+        });
+		scenarios.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ievt) {
+                int w = ((Integer)scenarios.getSelectedItem()).intValue();
+                if (env != null && env.getSimId() != w) {
+                    env.endSimulation();
+                    env.initWorld(w);
+                }
+            }
+        });
+		getCanvas().addMouseListener(new MouseListener() {
+            public void mouseClicked(MouseEvent e) {
+                int col = e.getX() / cellSizeW;
+                int lin = e.getY() / cellSizeH;
+                if (col >= 0 && lin >= 0 && col < getModel().getWidth() && lin < getModel().getHeight()) {
+                    EvacuationModel em = (EvacuationModel)model;
+                    em.add(EvacuationModel.DANGER, col, lin);
+                    EvacuationModel.spreadStack.addElement(new Location(col,lin));
+                }
+            }
+            public void mouseExited(MouseEvent e) {}
+            public void mouseEntered(MouseEvent e) {}
+            public void mousePressed(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {}
+        });
 	}
 	
 	public void updateTable(Object[] l) {

@@ -1,11 +1,9 @@
 package evacuation;
 
 
-import jason.asSemantics.Agent;
 import jason.asSyntax.*;
 import jason.environment.*;
 import jason.environment.grid.Location;
-import jason.stdlib.foreach;
 
 import java.util.logging.*;
 import java.util.*;
@@ -18,7 +16,7 @@ import java.util.*;
 public class EvacuationPlanet extends Environment {
 	
 	private Logger logger = Logger.getLogger("");
-	
+	int     simId    = 1;
     private EvacuationGUI gui;
     private EvacuationModel model;
     
@@ -35,6 +33,7 @@ public class EvacuationPlanet extends Environment {
     Term					exit = Literal.parseLiteral("exit");
     Term                    randomwalk     = Literal.parseLiteral("randomwalk");
     Term					spread		=Literal.parseLiteral("spread");
+    Term					die			=Literal.parseLiteral("register_death");
     
     public enum Move {
         UP, DOWN, RIGHT, LEFT
@@ -43,7 +42,7 @@ public class EvacuationPlanet extends Environment {
     /*Começar aqui*/
     @Override
     public void init(String[] args) {
-    	initWorld();
+    	initWorld(simId);
     }
     
     /*Executar as acçoes dos agentes*/
@@ -110,14 +109,10 @@ public class EvacuationPlanet extends Environment {
              }else if(action.equals(spread)) {
             	 result = model.spreadFire();
             	 result = true;
-             }else if(action.equals(exit)){
-            	 model.setAgPos(agId, 0,0);
+             }else if(action.equals(die)){
             	 String plist = consultPercepts(ag).toString();
-            	 System.out.println(plist);
             	 plist = plist.substring(1, plist.length() - 1);
-            	 System.out.println(plist);
             	 String[] perceps = plist.split(", ");
-            	 System.out.println(perceps);
             	 String eloc = "", pos = "";
             	 boolean knowExit = false;
             	 for(int i = 0; i < perceps.length; i++) {
@@ -131,7 +126,29 @@ public class EvacuationPlanet extends Environment {
             			 knowExit = true;
             		 }
             	 }
-            	 Object [] stats = new Object[] {ag,pos,eloc,knowExit};
+            	 Object [] stats = new Object[] {ag,pos,eloc,knowExit,"dead"};
+            	 model.exitdata.add(stats);
+            	 gui.updateTable(stats);
+            	 result = true;
+             } else if(action.equals(exit)){
+            	 model.setAgPos(agId, 0,0);
+            	 String plist = consultPercepts(ag).toString();
+            	 plist = plist.substring(1, plist.length() - 1);
+            	 String[] perceps = plist.split(", ");
+            	 String eloc = "", pos = "";
+            	 boolean knowExit = false;
+            	 for(int i = 0; i < perceps.length; i++) {
+            		 if(perceps[i].contains("exit_location")) {
+            			 eloc = perceps[i];
+            		 }
+            		 if(perceps[i].contains("pos")) {
+            			 pos = perceps[i];
+            		 }
+            		 if(perceps[i].equals("knowExit(yes)")) {
+            			 knowExit = true;
+            		 }
+            	 }
+            	 Object [] stats = new Object[] {ag,pos,eloc,knowExit,"safe"};
             	 model.exitdata.add(stats);
             	 gui.updateTable(stats);
             	 result = true;
@@ -159,14 +176,23 @@ public class EvacuationPlanet extends Environment {
     }
     
     /*Chamada de modelos e views*/
-    public void initWorld() {
+    public void initWorld(int w) {
     	//setModel
     	try {
-			model = EvacuationModel.world1();
+    		switch (w) {
+    		case 1:
+    			model = EvacuationModel.world1();
+    		case 2:
+    			model = EvacuationModel.world2();
+    		default:
+    			break;
+    		}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
     	clearPercepts();
+    	if(gui != null) gui.dispose();
     	gui = new EvacuationGUI(model);
     	gui.setEnv(this);
     	
@@ -301,6 +327,15 @@ public class EvacuationPlanet extends Environment {
             }
         }
     	return points;
+    }
+    public void endSimulation() {
+        addPercept(Literal.parseLiteral("end_of_simulation"));
+        informAgsEnvironmentChanged();
+        gui.setVisible(false);
+        EvacuationModel.destroy();
+    }
+    public int getSimId() {
+        return simId;
     }
     
 }

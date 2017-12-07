@@ -53,7 +53,7 @@ seen_exit_sign(no).
 
 /*Objectivos de fugir ao ser alertado para perigo*/
 /*O agente entrou em contacto com o fogo*/
-+!walkto : pos(X,Y) & cell(X,Y,danger) <- .my_name(N); .print("I died while running from danger"); .kill_agent(N).
++!walkto : pos(X,Y) & cell(X,Y,danger) <- .my_name(N); .print("I died while running from danger"); register_death;.kill_agent(N).
 /*Se o agente localização a porta de saída então ele sai*/
 +!walkto : pos(X,Y) & exit_location(X, Y) & knowExit(yes) <-
 	.print("I am safe"); exit;.my_name(N);.kill_agent(N).
@@ -75,6 +75,16 @@ seen_exit_sign(no).
 
 //+!wander : true <- randomwalk; .wait(500); !wander.  
 +!wander : pos(X,Y) & exit_location(X, Y) & knowExit(yes) <- .print("I decide to leave the building"); exit;.my_name(N);.kill_agent(N).
-+!wander : pos(X,Y) & cell(X,Y,danger)<- .my_name(N); .print("I am dead, did not see it coming"); .kill_agent(N).
++!wander : pos(X,Y) & cell(X,Y,danger)<- .my_name(N); .print("I am dead, did not see it coming"); register_death;.kill_agent(N).
 +!wander : cell(X, Y, danger) <- .print("I saw danger, running"); !walkto.
 +!wander : true <- randomwalk; .wait(250); !wander.
+
++end_of_simulation : true <-
+	.drop_desire(walkto);
+	.abolish(knowExit(_));
+	.abolish(pos(_,_));
+	.abolish(cell(_,_,_));
+	.abolish(cell(_,_,_,_));
+	.abolish(exit_location(_,_));
+	.abolish(seen_exit_sign(_));
+	!wander.

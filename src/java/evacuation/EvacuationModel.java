@@ -89,9 +89,6 @@ public class EvacuationModel extends GridWorldModel{
 		 model.add(EvacuationModel.EXIT_INFO_UP, 28, z);
 	 }
 	 model.add(EvacuationModel.EXIT, 25, 0);
-	 model.add(EvacuationModel.DANGER, 42,48);
-	 spreadStack.add(new Location(42,48));
-	 
 	 //Colocar agentes no mundo
 	 for (int i=0; i<nEvacuadores;i++) {
 		 //Definir posição
@@ -106,9 +103,43 @@ public class EvacuationModel extends GridWorldModel{
 		 while(model.hasObject(EvacuationModel.OBSTACLE, x, y)|| model.hasObject(EvacuationModel.DANGER, x, y) || model.hasObject(EvacuationModel.EXIT, x, y) );
 		 model.setAgPos(i, x, y); //Definir id e posição do agente no mundo
 	 }
-	 
 	 return model;
 	}
+static EvacuationModel world2() throws Exception {
+		
+		FileInputStream fis= new FileInputStream(new File("evacuation.mas2j"));
+		mas2j m2= new mas2j(fis);
+		MAS2JProject init= m2.mas();
+		int nEvacuadores=init.getAg("evacuador").getNbInstances();
+		EvacuationModel model = EvacuationModel.create(50, 50, nEvacuadores); 
+		
+		for(int i = 0; i < model.width; i++) {
+			 if(i != 25) 
+				 model.add(EvacuationModel.OBSTACLE, i, 0);
+			 model.add(EvacuationModel.OBSTACLE, i, model.height - 1);
+		 }
+		for(int i = 0; i < model.height  - 1; i++) {
+			 model.add(EvacuationModel.OBSTACLE, 0, i);
+			 model.add(EvacuationModel.OBSTACLE, model.width - 1, i);
+		 }
+		 
+		model.add(EvacuationModel.EXIT, 25, 0);
+		//Colocar agentes no mundo
+		 for (int i=0; i<nEvacuadores;i++) {
+			 //Definir posição
+			 int x,y;
+			 Random r= new Random();
+			 do {
+				 
+				 x= r.nextInt(model.width);
+				 y= r.nextInt(model.height);
+				 
+			 }
+			 while(model.hasObject(EvacuationModel.OBSTACLE, x, y)|| model.hasObject(EvacuationModel.DANGER, x, y) || model.hasObject(EvacuationModel.EXIT, x, y) );
+			 model.setAgPos(i, x, y); //Definir id e posição do agente no mundo
+		 }
+	 	return model;
+}
 	
 	
 	//getModelo
@@ -178,4 +209,7 @@ public class EvacuationModel extends GridWorldModel{
 		spreadStack = burnTiles;
 		return true;
 	}
+	public static void destroy() {
+        model = null;
+    }
 }
