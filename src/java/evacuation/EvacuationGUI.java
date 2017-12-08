@@ -93,7 +93,7 @@ public class EvacuationGUI extends GridWorldView{
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p.setBorder(BorderFactory.createEtchedBorder());
         scenarios = new JComboBox();
-        for(int i = 1; i<=2;i++) {
+        for(int i = 1; i<=3;i++) {
         	scenarios.addItem(i);
         }
         System.out.println(selectedModel);

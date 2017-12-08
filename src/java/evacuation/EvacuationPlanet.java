@@ -182,8 +182,13 @@ public class EvacuationPlanet extends Environment {
     		switch (w) {
     		case 1:
     			model = EvacuationModel.world1();
+    			break;
     		case 2:
     			model = EvacuationModel.world2();
+    			break;
+    		case 3:
+    			model = EvacuationModel.world3();
+    			break;
     		default:
     			break;
     		}
@@ -209,6 +214,7 @@ public class EvacuationPlanet extends Environment {
      	removePerceptsByUnif(agName, Literal.parseLiteral("pos(_,_)"));
      	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,danger)"));
      	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,exit_sign,_)"));
+     	removePerceptsByUnif(agName, Literal.parseLiteral("cell(_,_,agent,_)"));
         // its location
         Location l = model.getAgPos(ag);
         addPercept(agName, Literal.parseLiteral("pos(" + l.x + "," + l.y + ")"));
@@ -276,6 +282,10 @@ public class EvacuationPlanet extends Environment {
             		if(model.hasObject(EvacuationModel.EXIT, pt)) {
             			addPercept(name, Literal.parseLiteral("cell("+pt.x+","+pt.y+",exit)"));
             			addPercept(name, Literal.parseLiteral("knowExit(yes)"));
+            		}
+            		if(model.hasObject(EvacuationModel.AGENT, pt)) {
+            			String nei = "evacuador"+(model.getAgAtPos(pt)+1);
+            			addPercept(name, Literal.parseLiteral("cell("+pt.x+","+pt.y+",agent,"+nei+")"));
             		}
             		if(model.hasObject(EvacuationModel.OBSTACLE, pt)) 
             			break;

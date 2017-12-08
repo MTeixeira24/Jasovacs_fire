@@ -18,14 +18,16 @@ seen_exit_sign(no).
 //!start.
 !getPosition. //Obter posição no mundo 
 !see.
+!warn.
 
 /* Plans */
 
-
-+!getPosition : true <- agentGetPosition; !wander.
-
-
-/*SIGHT PROCESSING NEW*/
+/*COMMUNICATION */
++!warn(_,_,[]) : true <- !warn.
++!warn(X,Y,[L|Ls]) : true <- .wait(200); .print("Warning",L,"of danger");.send(L, tell, cell(X,Y,danger)); !warn(X,Y,Ls).
++!warn : cell(X,Y,danger) <- .wait(200); .findall(A, cell(_,_,agent,A),L);.drop_desire(warn);!warn(X,Y,L).
++!warn : true <- .wait(200); !warn.
+/*SIGHT*/
 
 +!see : knowExit(yes) & cell(EX,EY,exit) <- set_exit_location(EX,EY); .wait(250); !see.
 +!see : seen_exit_sign(yes) & pos(AX,AY) <- .findall(cell(CX,CY,D),cell(CX,CY,exit_sign,D), L); jia.getNearestSign(AX,AY,L, ND);
@@ -35,22 +37,6 @@ seen_exit_sign(no).
 +!see : true <- !see.
 
 /*********/
-
-
-/*Cada agente irá estar sempre atento ao que esta ao seu redor. As intenções de olhar são seguidas em simultaneo com as de mover*/
-+!see_danger : cell(X, Y, danger) <-.wait(300); .print("I see danger at ",X," ",Y); !see_sign.
-+!see_danger : true <- .wait(300);!see_sign.
-/*Se o agente já localizou a saída não precisa de olhar para sinais de saida */
-+!see_sign : cell(_, _, exit_sign, _) & knowExit(yes) <- !see_exit.
-+!see_sign : cell(X, Y, exit_sign, D) & pos(AX, AY) <- .print("I spot an exit sign at ",X," ",Y," pointing ",D);
-										 jia.get_sign_point(AX,AY,D,EX,EY); .abolish(exit_location(_,_));
-										 set_exit_location(EX,EY); !see_exit.
-+!see_sign : true <- !see_exit.
-+!see_exit : cell(X,Y,exit) <- .print("I spotted the exit!"); .abolish(knowExit(_));.abolish(exit_location(_,_));set_exit_location(X,Y); .wait(50).
-+!see_exit : true <- .wait(50).
-
--!see_danger <- !see_danger.
-
 /*Objectivos de fugir ao ser alertado para perigo*/
 /*O agente entrou em contacto com o fogo*/
 +!walkto : pos(X,Y) & cell(X,Y,danger) <- .my_name(N); .print("I died while running from danger"); register_death;.kill_agent(N).
@@ -62,14 +48,7 @@ seen_exit_sign(no).
 	.print("I can't find an exit!!'"); .abolish(exit_location(_,_)); !wander.
 /*Depois do agente calcular uma possível rota de fuga irá-se dirigir para lá*/									
 +!walkto : pos(X,Y) & exit_location(EX, EY) <- .wait(250);.print("Walking");jia.get_direction(X, Y, EX, EY, D); .print(D);do(D); !walkto;.
-/*Se o agente ter visto um sinal de saída, usar essa informação para calcular uma rota*/
-/*+!walkto: pos(X,Y) & seen_exit_sign(yes) <- .findall(dir(D,Dist), cell(CX,CY,exit_sign,D) & Dist = ((CX-X)+(CY-Y)),L);.findall(Dists,dir(_,Dists),LDs);
-											.min(LDs,MinDs);dir(MinD, MinDs);jia.get_sign_point(X,Y,MinD,EX,EY); set_exit_location(EX,EY); !walkto. */
-/*Em ignorancia da saída o melhor que um agente pode fazer é fugir para o lado oposto do perigo*/
-/* +!walkto: pos(X,Y) & cell(EX, EY, danger) <- 
-	.wait(250); .print("I don't know where the exit is! Fleeing from danger for now"); 
-	jia.get_oposite_point(X, Y, EX, EY, RX, RY);
-	set_exit_location(RX, RY); !walkto.*/
+
 //Não sei de nada, volto a caminhar
 +!walkto : true <- .drop_intention(walkto); !wander.
 
@@ -79,6 +58,8 @@ seen_exit_sign(no).
 +!wander : cell(X, Y, danger) <- .print("I saw danger, running"); !walkto.
 +!wander : true <- randomwalk; .wait(250); !wander.
 
++!getPosition : true <- agentGetPosition; !wander.
+
 +end_of_simulation : true <-
 	.drop_desire(walkto);
 	.abolish(knowExit(_));
@@ -87,4 +68,4 @@ seen_exit_sign(no).
 	.abolish(cell(_,_,_,_));
 	.abolish(exit_location(_,_));
 	.abolish(seen_exit_sign(_));
-	!wander.
+	!getPosition.

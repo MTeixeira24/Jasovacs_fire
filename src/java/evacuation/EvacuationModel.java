@@ -39,9 +39,8 @@ public class EvacuationModel extends GridWorldModel{
     
     //Instanciação de um modelo global
     synchronized public static EvacuationModel create(int w, int h, int nbAgs) {
-    	if(model == null) {
-    		model = new EvacuationModel(w,h,nbAgs); //width Height NºdeAgentes
-    	}
+    	
+    	model = new EvacuationModel(w,h,nbAgs); //width Height NºdeAgentes
     	return model;
     }
     
@@ -105,7 +104,7 @@ public class EvacuationModel extends GridWorldModel{
 	 }
 	 return model;
 	}
-static EvacuationModel world2() throws Exception {
+	static EvacuationModel world2() throws Exception {
 		
 		FileInputStream fis= new FileInputStream(new File("evacuation.mas2j"));
 		mas2j m2= new mas2j(fis);
@@ -139,7 +138,146 @@ static EvacuationModel world2() throws Exception {
 			 model.setAgPos(i, x, y); //Definir id e posição do agente no mundo
 		 }
 	 	return model;
-}
+	}
+	static EvacuationModel world3() throws Exception {
+		
+		FileInputStream fis= new FileInputStream(new File("evacuation.mas2j"));
+		mas2j m2= new mas2j(fis);
+		MAS2JProject init= m2.mas();
+		int nEvacuadores=init.getAg("evacuador").getNbInstances();
+		EvacuationModel model = EvacuationModel.create(50, 50, nEvacuadores); 
+		
+		for(int i = 0; i < model.width; i++) {
+			 if(i != 25) {
+				 model.add(EvacuationModel.OBSTACLE, i, 0);
+				 model.add(EvacuationModel.OBSTACLE, i, model.height - 1);
+			 }
+			
+		 }
+		for(int i = 0; i < model.height  - 1; i++) {
+			if(i != 25) {
+				model.add(EvacuationModel.OBSTACLE, 0, i);
+				 model.add(EvacuationModel.OBSTACLE, model.width - 1, i);
+			}
+		 }
+		for(int i = 1; i < model.width - 1; i++) {
+			if(i < 24 || i > 28) {
+				model.add(EvacuationModel.OBSTACLE, i, 40);
+				model.add(EvacuationModel.OBSTACLE, i, 20);
+			}
+		}
+		for(int i = 21; i < 40; i++) {
+			if(i != 31 && i != 32) {
+				model.add(EvacuationModel.OBSTACLE, 23, i);
+				 model.add(EvacuationModel.OBSTACLE, 29, i);
+			}
+			
+		 }
+		for(int i = 1; i < 21; i++) {
+			if(i != 8 && i != 9) {
+				model.add(EvacuationModel.OBSTACLE, 23, i);
+				 model.add(EvacuationModel.OBSTACLE, 29, i);
+			}
+		 }
+		for(int i = 41; i < model.height  - 1; i++) {
+			if(i != 43 && i != 44) {
+				model.add(EvacuationModel.OBSTACLE, 23, i);
+				 model.add(EvacuationModel.OBSTACLE, 29, i);
+			}
+		 }
+		for(int i = 1; i < 21; i++) {
+			model.add(EvacuationModel.OBSTACLE, i, 7);
+		}
+		for(int i = 14; i < 20; i++) {
+			model.add(EvacuationModel.OBSTACLE, 6, i);
+		}
+		for(int i = 14; i < 20; i++) {
+			model.add(EvacuationModel.OBSTACLE, 12, i);
+		}
+		for(int i = 14; i < 20; i++) {
+			model.add(EvacuationModel.OBSTACLE, 18, i);
+		}
+		for(int i = 1; i < 21; i++) {
+			if(i != 4 && i !=5 && i != 11 && i != 10 && i != 16 && i!= 17)
+			model.add(EvacuationModel.OBSTACLE, i, 14);
+		}
+		for(int i = 30; i < 49; i++) {
+			if(i != 33 && i !=34 && i != 40 && i != 41 && i != 45 && i!= 46)
+			model.add(EvacuationModel.OBSTACLE, i, 14);
+		}
+		for(int i = 14; i < 20; i++) {
+			model.add(EvacuationModel.OBSTACLE, 36, i);
+		}
+		for(int i = 14; i < 20; i++) {
+			model.add(EvacuationModel.OBSTACLE, 42, i);
+		}
+		for(int i = 14; i < 20; i++) {
+			model.add(EvacuationModel.OBSTACLE, 48, i);
+		}
+		model.remove(EvacuationModel.OBSTACLE, 47,40);
+		model.remove(EvacuationModel.OBSTACLE, 48,40);
+		model.remove(EvacuationModel.OBSTACLE, 1,40);
+		model.remove(EvacuationModel.OBSTACLE, 2,40);
+		
+		for(int j = 29; j < 47; j++) {
+			for(int i = 33; i < 40; i++) {
+				model.add(EvacuationModel.OBSTACLE, j, i);
+			}
+		}
+		for(int j = 3; j < 23; j++) {
+			for(int i = 33; i < 40; i++) {
+				model.add(EvacuationModel.OBSTACLE, j, i);
+			}
+		}
+		 
+		model.add(EvacuationModel.EXIT, 25, 0);
+		model.add(EvacuationModel.EXIT, 25, 49);
+		model.add(EvacuationModel.EXIT, 0, 25);
+		model.add(EvacuationModel.EXIT, 49, 25);
+		
+		model.add(EvacuationModel.EXIT_INFO_UP,3,33);
+		model.add(EvacuationModel.EXIT_INFO_UP,46,33);
+		model.add(EvacuationModel.EXIT_INFO_UP,3,40);
+		model.add(EvacuationModel.EXIT_INFO_UP,46,40);
+		model.add(EvacuationModel.EXIT_INFO_UP,26,11);
+		model.add(EvacuationModel.EXIT_INFO_UP,26,19);
+		
+		model.add(EvacuationModel.EXIT_INFO_DOWN,23,37);
+		model.add(EvacuationModel.EXIT_INFO_DOWN,29,37);
+		model.add(EvacuationModel.EXIT_INFO_DOWN,23,29);
+		model.add(EvacuationModel.EXIT_INFO_DOWN,29,29);
+		model.add(EvacuationModel.EXIT_INFO_DOWN,26,44);
+		
+		model.add(EvacuationModel.EXIT_INFO_RIGHT,19,40);
+		model.add(EvacuationModel.EXIT_INFO_RIGHT,41,40);
+		model.add(EvacuationModel.EXIT_INFO_RIGHT,44,21);
+		model.add(EvacuationModel.EXIT_INFO_RIGHT,35,21);
+		model.add(EvacuationModel.EXIT_INFO_RIGHT,5,7);
+		model.add(EvacuationModel.EXIT_INFO_RIGHT,16,7);
+		
+		
+		model.add(EvacuationModel.EXIT_INFO_LEFT,16,21);
+		model.add(EvacuationModel.EXIT_INFO_LEFT,8,21);
+		model.add(EvacuationModel.EXIT_INFO_LEFT,35,40);
+		model.add(EvacuationModel.EXIT_INFO_LEFT,33,7);
+		model.add(EvacuationModel.EXIT_INFO_LEFT,46,7);
+		//Colocar agentes no mundo
+		 for (int i=0; i<nEvacuadores;i++) {
+			 //Definir posição
+			 int x,y;
+			 Random r= new Random();
+			 do {
+				 
+				 x= r.nextInt(model.width);
+				 y= r.nextInt(model.height);
+				 
+			 }
+			 while(model.hasObject(EvacuationModel.OBSTACLE, x, y)|| model.hasObject(EvacuationModel.DANGER, x, y) || model.hasObject(EvacuationModel.EXIT, x, y) );
+			 model.setAgPos(i, x, y); //Definir id e posição do agente no mundo
+		 }
+	 	return model;
+	}
+	
 	
 	
 	//getModelo
